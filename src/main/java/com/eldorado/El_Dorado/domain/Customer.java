@@ -2,5 +2,5 @@ package com.eldorado.El_Dorado.domain;
 
 
 
-public class Address {
+public class Customer {
 }
