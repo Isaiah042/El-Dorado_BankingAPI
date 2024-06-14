@@ -3,6 +3,8 @@ package com.eldorado.El_Dorado.controller;
 
 import com.eldorado.El_Dorado.domain.Deposit;
 import com.eldorado.El_Dorado.service.DepositService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,29 +15,38 @@ public class DepositController {
     @Autowired
     private DepositService depositService;
 
+    private static final Logger depositLogger = LoggerFactory.getLogger(DepositController.class);
+
+
 
     @GetMapping("accounts/{accountId}/deposits")
     public ResponseEntity<?> getAllAccountDeposits(@PathVariable Long accountId){
+        depositService.getAllDeposits(accountId);
         return null;
     }
 
     @GetMapping("/deposits/{depositId}")
     public ResponseEntity<?> getDepositById(@PathVariable Long depositId){
+        depositService.getById(depositId);
         return null;
     }
 
     @PostMapping("accounts/{accountId}/deposits")
-    public void makeNewDeposit(@PathVariable Long accountId){
+    public ResponseEntity<?> makeNewDeposit(@PathVariable Long accountId){
+        depositService.makeDeposit(accountId);
+        return null;
     }
 
     @PutMapping("deposits/{depositId}")
-    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId){
+    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, Deposit deposit){
+        depositService.updateDeposit(depositId, deposit);
         return null;
     }
 
     @DeleteMapping("deposits/{depositId}")
     public ResponseEntity<?> deleteExistingDeposit (@PathVariable Long depositId){
         //status 204 NO_CONTENT
+        depositService.deleteDeposit(depositId);
         return null;
     }
 

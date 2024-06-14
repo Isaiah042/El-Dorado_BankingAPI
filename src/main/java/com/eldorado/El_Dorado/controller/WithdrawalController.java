@@ -10,6 +10,8 @@ public class WithdrawalController {
 
     @Autowired
     private WithdrawalRepository withdrawalRepository;
+  
+    private static final Logger withdrawalLogger = LoggerFactory.getLogger(WithdrawalController.class);
     @GetMapping("accounts/{accountId}/withdrawals")
     public ResponseEntity<?> getAllAccountWithdrawals(@PathVariable Long accountId){
         return null;
