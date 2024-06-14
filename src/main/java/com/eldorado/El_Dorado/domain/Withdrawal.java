@@ -28,7 +28,7 @@ public class Withdrawal {
     }
 
     public Withdrawal() {
-        
+
     }
 
     public Long getId() {
