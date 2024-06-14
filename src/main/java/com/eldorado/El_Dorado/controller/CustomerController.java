@@ -1,4 +1,4 @@
 package com.eldorado.El_Dorado.controller;
 
-public class CutomerController {
+public class CustomerController {
 }
