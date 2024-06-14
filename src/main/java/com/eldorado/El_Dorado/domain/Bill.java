@@ -1,105 +1,112 @@
 package com.eldorado.El_Dorado.domain;
 
 
+
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
 import java.time.LocalDate;
 
+import com.eldorado.El_Dorado.domain.enums.Status;
+
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Bill {
+
     //Variables
-@Id
-@GeneratedValue
-private Long id;
-    private String status;
-
-    private String payee;
-    private String nickname;
-    private LocalDate creationDate;
-    private LocalDate paymentDate;
-    private Integer recurringDate;
-    private LocalDate upcomingPaymentDate;
-    private Double paymentAmount;
-    private Long accountId;
+    @Id
+    @GeneratedValue
 
 
-    public Long getId() {
-        return id;
+    private Long BillId;
+    private Status billStatus;
+
+    private String nickName;
+
+    private LocalDateTime creation_date;
+
+    private LocalDateTime payment_date;
+
+    private Integer recurring_date;
+
+    private LocalDate upcoming_payment_date;
+
+    private Double payment_amount;
+
+    private Customer account_id;
+
+    public Long getBillId() {
+        return BillId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillId(Long billId) {
+        BillId = billId;
     }
 
-    public String getStatus() {
-        return status;
+    public Status getBillStatus() {
+        return billStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setBillStatus(Status billStatus) {
+        this.billStatus = billStatus;
     }
 
-    public String getPayee() {
-        return payee;
+    public String getNickMame() {
+        return nickName;
     }
 
-    public void setPayee(String payee) {
-        this.payee = payee;
+    public void setNickMame(String nickMame) {
+        this.nickName = nickMame;
     }
 
-    public String getNickname() {
-        return nickname;
+    public LocalDateTime getCreation_date() {
+        return creation_date;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setCreation_date(LocalDateTime creation_date) {
+        this.creation_date = creation_date;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public LocalDateTime getPayment_date() {
+        return payment_date;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+    public void setPayment_date(LocalDateTime payment_date) {
+        this.payment_date = payment_date;
     }
 
-    public LocalDate getPaymentDate() {
-        return paymentDate;
+    public Integer getRecurring_date() {
+        return recurring_date;
     }
 
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
+    public void setRecurring_date(Integer recurring_date) {
+        this.recurring_date = recurring_date;
     }
 
-    public Integer getRecurringDate() {
-        return recurringDate;
+    public LocalDate getUpcoming_payment_date() {
+        return upcoming_payment_date;
     }
 
-    public void setRecurringDate(Integer recurringDate) {
-        this.recurringDate = recurringDate;
+    public void setUpcoming_payment_date(LocalDate upcoming_payment_date) {
+        this.upcoming_payment_date = upcoming_payment_date;
     }
 
-    public LocalDate getUpcomingPaymentDate() {
-        return upcomingPaymentDate;
+    public Double getPayment_amount() {
+        return payment_amount;
     }
 
-    public void setUpcomingPaymentDate(LocalDate upcomingPaymentDate) {
-        this.upcomingPaymentDate = upcomingPaymentDate;
+    public void setPayment_amount(Double payment_amount) {
+        this.payment_amount = payment_amount;
     }
 
-    public Double getPaymentAmount() {
-        return paymentAmount;
+    public Customer getAccount_id() {
+        return account_id;
     }
 
-    public void setPaymentAmount(Double paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setAccount_id(Customer account_id) {
+        this.account_id = account_id;
     }
 }
+
+
