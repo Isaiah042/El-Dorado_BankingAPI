@@ -12,16 +12,15 @@ import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Bill {
+public class Bill{
 
+    //Variables
     @Id
     @GeneratedValue
     private Long BillId;
     
     private Status billStatus;
-
     private String payee;
-
     private String nickName;
 
     private LocalDateTime creation_date;
