@@ -12,20 +12,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class DepositService {
 
+    private final DepositRepository depositRepository;
+
     @Autowired
-    private DepositRepository depositRepository;
+    public DepositService(DepositRepository depositRepository){
+        this.depositRepository = depositRepository;
+    }
+
 
 
     public ResponseEntity<?> getAllDeposits(Long accountId){
-        return null;
+        Iterable<Deposit> allDeposits = depositRepository.findByAccount(accountId);
+        if(allDeposits == null){
+            throw new ResourceNotFoundException("Account not found");
+        }else
+            return new ResponseEntity<>(allDeposits, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getById(Long depositId){
-        return null;
+        Deposit foundDeposit = depositRepository.findById(depositId).orElse(null);
+        if(foundDeposit == null){
+            throw new ResourceNotFoundException("Error fetching deposit with id");
+        } else
+            return new ResponseEntity<>(foundDeposit, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> makeDeposit(Long accountId){
-        return null;
+    public ResponseEntity<?> makeDeposit(Long accountId, Deposit deposit){
+        Deposit newDeposit = depositRepository.save(deposit);
+        return new ResponseEntity<>(newDeposit, HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> updateDeposit(Long depositId, Deposit depositRequest){
@@ -38,24 +52,15 @@ public class DepositService {
             deposit.setAmount(depositRequest.getAmount());
             deposit.setDescription(depositRequest.getDescription());
             depositRepository.save(deposit);
-            return new ResponseEntity(deposit, HttpStatus.OK);
-        }).orElseThrow(() -> new ResourceNotFoundException("DepositId" + depositId + "not found."));
+            return new ResponseEntity(deposit, HttpStatus.ACCEPTED);
+        }).orElseThrow(() -> new ResourceNotFoundException("Deposit ID does not exist."));
     }
 
     public ResponseEntity<?> deleteDeposit(Long depositId){
-        //status 204 NO_CONTENT
-        return null;
+        Deposit depositToDelete = depositRepository.findById(depositId).orElse(null);
+        if(depositToDelete == null){
+            throw new ResourceNotFoundException("This id does not exist in deposits");
+        }else
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
-    //timestamp of current datetime as string on creation of a deposit
-    /**
-     * Get withdrawals for a specific account
-     *
-     * Get withdrawal by id
-     *
-     * POST Create a withdrawal
-     *
-     * PUT Update a specified existing withdrawal
-     *
-     * DELETE Delete a specific existing withdrawal
-     */
 }
