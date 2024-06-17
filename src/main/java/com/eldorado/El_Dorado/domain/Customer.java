@@ -1,10 +1,12 @@
 package com.eldorado.El_Dorado.domain;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
 
 import java.util.Set;
 
+@Entity
 public class Customer {
 
     @Id

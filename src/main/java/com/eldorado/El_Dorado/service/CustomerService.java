@@ -20,20 +20,25 @@ public class CustomerService {
     @Autowired
     private AccountService accountService;
 
-    public Optional<Customer> getCustomerByAccountId(Long accountId) {
-        return customerRepo.findById(accountId);
-    }
-
-    public Iterable<Customer> getAllCustomers() {
-        return customerRepo.findAll();
-    }
-
     protected void verifyCustomer(Long customerId) throws ResourceNotFoundException {
         Optional<Customer> customer = customerRepo.findById(customerId);
 
         if(customer.isEmpty()) {
             throw new ResourceNotFoundException("Customer with ID #" + customerId + " does not exist.");
         }
+    }
+
+    public Optional<Customer> getCustomerByAccountId(Long accountId) {
+        return customerRepo.findById(accountId);
+    }
+
+    public Optional<Customer> getCustomerByCustomerId(Long customerId) {
+        verifyCustomer(customerId);
+        return customerRepo.findById(customerId);
+    }
+
+    public Iterable<Customer> getAllCustomers() {
+        return customerRepo.findAll();
     }
 
     public Customer createCustomer(Customer customerToBeCreated) {
@@ -49,11 +54,6 @@ public class CustomerService {
     public void deleteCustomer(Long customerId) {
         verifyCustomer(customerId);
         customerRepo.deleteById(customerId);
-    }
-
-    public Optional<Customer> getCustomerById(Long customerId) {
-        verifyCustomer(customerId);
-        return customerRepo.findById(customerId);
     }
 
     public Customer getCustomerByName(String firstName, String lastName) throws ResourceNotFoundException {

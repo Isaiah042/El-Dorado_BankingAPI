@@ -2,18 +2,25 @@ package com.eldorado.El_Dorado.controller;
 
 
 import com.eldorado.El_Dorado.domain.Deposit;
+import com.eldorado.El_Dorado.response.ResponseHandler;
 import com.eldorado.El_Dorado.service.DepositService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DepositController {
 
+
+    private final DepositService depositService;
+
     @Autowired
-    private DepositService depositService;
+    public DepositController(DepositService depositService){
+        this.depositService = depositService;
+    }
 
     private static final Logger depositLogger = LoggerFactory.getLogger(DepositController.class);
 
@@ -32,15 +39,17 @@ public class DepositController {
     }
 
     @PostMapping("accounts/{accountId}/deposits")
-    public ResponseEntity<?> makeNewDeposit(@PathVariable Long accountId){
-        depositService.makeDeposit(accountId);
+    public ResponseEntity<?> makeNewDeposit(@PathVariable Long accountId, @RequestBody Deposit deposit){
+        depositService.makeDeposit(accountId, deposit);
         return null;
     }
 
     @PutMapping("deposits/{depositId}")
-    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, Deposit deposit){
-        depositService.updateDeposit(depositId, deposit);
-        return null;
+    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit){
+        return ResponseHandler.responseBuilder(
+                "Accepted deposit modification",
+                HttpStatus.ACCEPTED,
+                depositService.updateDeposit(depositId, deposit));
     }
 
     @DeleteMapping("deposits/{depositId}")

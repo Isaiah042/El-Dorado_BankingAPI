@@ -1,20 +1,17 @@
 package com.eldorado.El_Dorado.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.eldorado.El_Dorado.domain.enums.TransactionType;
+import jakarta.persistence.*;
 
+
+@Entity
 public class Deposit {
     @Id
     @GeneratedValue
     private Long id;     //deposit id
-    private String type;    //P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
+    private TransactionType type;    //P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
     private String transaction_date;
     private String status;
-
-    @ManyToOne
-    @JoinColumn  //(name = "accountId")
     private Long payee_id;  //accountId receiving deposit
     private String medium;
     private Double amount;
@@ -22,7 +19,7 @@ public class Deposit {
 
     //ability to deposit to a different account
 
-    public Deposit(Long id, String type, String transaction_date, String status, Long payee_id, String medium, Double amount, String description) {
+    public Deposit(Long id, TransactionType type, String transaction_date, String status, Long payee_id, String medium, Double amount, String description) {
         this.id = id;
         this.type = type;
         this.transaction_date = transaction_date;
@@ -44,11 +41,11 @@ public class Deposit {
         this.id = id;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
