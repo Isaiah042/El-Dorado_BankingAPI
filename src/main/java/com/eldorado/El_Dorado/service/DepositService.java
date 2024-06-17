@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DepositService {
 
@@ -22,7 +24,7 @@ public class DepositService {
 
 
     public ResponseEntity<?> getAllDeposits(Long accountId){
-        Iterable<Deposit> allDeposits = depositRepository.findByAccount(accountId);
+        List<Deposit> allDeposits = depositRepository.findByAccount(accountId);
         if(allDeposits == null){
             throw new ResourceNotFoundException("Account not found");
         }else
