@@ -1,13 +1,12 @@
 package com.eldorado.El_Dorado.domain;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
 public class Bill{
 
     //Variables
@@ -16,11 +15,9 @@ public class Bill{
     private Long BillId;
     
     private Status billStatus;
+
     private String billPayee;
 
-    @ManyToOne
-    @JoinColumn
-    private String payee;
     private String nickName;
 
     private String creation_date;
@@ -51,20 +48,8 @@ public class Bill{
         this.billStatus = billStatus;
     }
 
-    public String getPayee() {
-        return payee;
-    }
-
-    public void setPayee(String payee) {
-        this.payee = payee;
-    }
-
     public String getNickName() {
         return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
     }
 
     public String getCreation_date() {
@@ -123,6 +108,9 @@ public class Bill{
         this.billPayee = billPayee;
     }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }
 
 
