@@ -1,6 +1,7 @@
 package com.eldorado.El_Dorado.domain;
+import com.eldorado.El_Dorado.domain.enums.Medium;
 import jakarta.persistence.*;
-
+import org.springframework.data.annotation.Id;
 import java.time.LocalDate;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
@@ -12,7 +13,8 @@ public class Bill{
     //Variables
     @Id
     @GeneratedValue
-    private Long BillId;
+
+    private Long billId;
     
     private Status billStatus;
 
@@ -29,15 +31,19 @@ public class Bill{
     private String upcoming_payment_date;
 
     private Double payment_amount;
-
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     private Customer account_id;
 
+    @Enumerated(EnumType.STRING)
+    private Medium medium;
+
     public Long getBillId() {
-        return BillId;
+        return billId;
     }
 
     public void setBillId(Long billId) {
-        BillId = billId;
+        this.billId = billId;
     }
 
     public Status getBillStatus() {
@@ -48,10 +54,20 @@ public class Bill{
         this.billStatus = billStatus;
     }
 
+    public String getBillPayee() {
+        return billPayee;
+    }
+
+    public void setBillPayee(String billPayee) {
+        this.billPayee = billPayee;
+    }
     public String getNickName() {
         return nickName;
     }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
     public String getCreation_date() {
         return creation_date;
     }
@@ -100,17 +116,12 @@ public class Bill{
         this.account_id = account_id;
     }
 
-    public String getBillPayee() {
-        return billPayee;
+
+    public Medium getMedium() {
+        return medium;
     }
 
-    public void setBillPayee(String billPayee) {
-        this.billPayee = billPayee;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setMedium(Medium medium) {
+        this.medium = medium;
     }
 }
-
-

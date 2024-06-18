@@ -29,8 +29,6 @@ public class AccountService {
         accountRepo.findById(accountId);
     }
 
-
-
     public void getAccountsByCustomerId(Long customerId){
         customerRepo.findById(customerId);
     }
@@ -68,7 +66,41 @@ public class AccountService {
 
 }
 
-  
+    //Variables here FOLLOW THE BOOK
 
+    public void getAccountsByCustomerId(Long customerId){
+        customerRepo.findById(customerId);
+    }
+
+
+    public ResponseEntity<Object> deleteAccount(@PathVariable Long accountId) {
+        return accountRepo.findById(accountId)
+                .map(account -> {
+                    accountRepo.delete(account);
+                    return ResponseEntity.ok().build();
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    public void verifyAccount(Long accountId){
+        Optional<Account> account = accountRepo.findById(accountId);
+        if(account.isEmpty()) {
+            throw new ResourceNotFoundException("Account with ID of #" + accountId + " does not exist!");
+        }
+    }
+
+    public void updateAccount(Long accountId, Account accountDetails) {
+        accountRepo.findById(accountId)
+                .map(account -> {
+                    account.setType(accountDetails.getType());
+                    account.setNickname(accountDetails.getNickname());
+                    account.setRewards(accountDetails.getRewards());
+                    account.setBalance(accountDetails.getBalance());
+                    account.setCustomer(accountDetails.getCustomer());
+                    Account updatedAccount = accountRepo.save(account);
+                    return ResponseEntity.ok().body(updatedAccount);
+                });
+        ResponseEntity.notFound().build();
+    }
+}
 
 

@@ -43,7 +43,6 @@ public class AccountController {
         accountService.deleteAccount(accountId);
         return null;
     }
-
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Account> verifyAccount(@PathVariable Long accountId){
         accountService.verifyAccount(accountId);

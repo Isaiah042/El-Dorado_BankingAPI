@@ -2,9 +2,7 @@ package com.eldorado.El_Dorado.domain;
 
 
 import com.eldorado.El_Dorado.domain.enums.AccountType;
-
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.*;
 
 
@@ -23,6 +21,7 @@ public class Account {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ACCOUNT_ID")
     private Customer customer;
+    private AccountType type;
 
     @Enumerated(EnumType.STRING)
     private AccountType type;

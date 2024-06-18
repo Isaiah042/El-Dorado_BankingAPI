@@ -26,12 +26,15 @@ public class BillService {
 
     public Optional<Bill> getBillById(Long billID){
         return billRepository.findById(billID);
+
     }
 
     public Iterable<Bill> getAllBills(){
         return billRepository.findAll();
     }
-
+    public Iterable<Bill> getBillsForAccount(Long accountId) {
+        return billRepository.findByAccountId(accountId);
+    }
     public void deleteBill(Long billID){
         Bill currentBalance = billRepository.findById(billID)
                 .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
@@ -44,7 +47,7 @@ public class BillService {
         }
     }
 
-    protected ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
+    public ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
      return billRepository.findById(billId).map(bill ->{
          bill.setNickName(updatedBill.getNickName());
          bill.setPayment_amount(updatedBill.getPayment_amount());
