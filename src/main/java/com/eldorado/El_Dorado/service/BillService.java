@@ -7,17 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
 public class BillService {
-
     @Autowired
     private BillRepository billRepository;
+    public Bill createBill(Bill bill) {
+        return billRepository.save(bill);
+    }
 
 
-   // Pretty sure I account class to be done to make my createBill Method
+
+
+
+
 
     public Optional<Bill> getBillById(Long billID){
         return billRepository.findById(billID);
@@ -53,4 +57,5 @@ public class BillService {
     ).orElseThrow(() -> new ResourceNotFoundException("Bill Id " + billId + " doesn't exist."));
         }
 }
+
 
