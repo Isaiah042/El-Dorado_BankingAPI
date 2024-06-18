@@ -1,40 +1,45 @@
 package com.eldorado.El_Dorado.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Customer {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotEmpty
+    @Column(name = "firstName")
+    private String firstName;
+
+    @NotEmpty
+    @Column(name = "lastName")
+    private String lastName;
 
     private static long idCounter = 0;
-    private Long id;
-    private String firstName;
-    private String lastName;
+
+    @OneToMany
     private Set<Address> address;
 
-    public Customer(String firstName, String lastName, Set<Address> address) {
-        this.id = generateId();
+    @OneToMany
+    private Set<Account> accounts;
+
+    public Customer(Long id, String firstName, String lastName, Set<Address> address, Set<Account> accounts) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-    }
-
-    private synchronized static long generateId() {
-        return idCounter++;
+        this.accounts = accounts;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public static void setIdCounter(long idCounter) {
-        Customer.idCounter = idCounter;
     }
 
     public void setId(Long id) {
@@ -57,6 +62,14 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public static long getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(long idCounter) {
+        Customer.idCounter = idCounter;
+    }
+
     public Set<Address> getAddress() {
         return address;
     }
@@ -65,13 +78,11 @@ public class Customer {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address=" + address +
-                '}';
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 }
