@@ -12,9 +12,10 @@ public class Account {
     private String nickname;
     private Integer rewards;
     private Double balance;
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ACCOUNT_ID")
     private Customer customer;
+    @Enumerated(EnumType.STRING)
     private AccountType type;
 
     public Long getId() {

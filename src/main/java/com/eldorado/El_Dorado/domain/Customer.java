@@ -1,9 +1,7 @@
 package com.eldorado.El_Dorado.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Set;
 
@@ -15,7 +13,10 @@ public class Customer {
     private Long id;
     private String firstName;
     private String lastName;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name= "CUSTOMER_ID")
     private Set<Address> address;
+
 
     public Customer(Long id, String firstName, String lastName, Set<Address> address) {
         this.id = id;
