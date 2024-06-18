@@ -1,12 +1,15 @@
 package com.eldorado.El_Dorado.domain;
 
 
+import com.eldorado.El_Dorado.domain.enums.AccountType;
+
 public class Account {
     private Long id;
     private String nickname;
     private Integer rewards;
     private Double balance;
     private Customer customer;
+    private AccountType type;
 
     public Long getId() {
         return id;
@@ -46,5 +49,13 @@ public class Account {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public AccountType getType() {
+        return type;
+    }
+
+    public void setType(AccountType type) {
+        this.type = type;
     }
 }
