@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DepositService {
 
@@ -22,7 +24,7 @@ public class DepositService {
 
 
     public ResponseEntity<?> getAllDeposits(Long accountId){
-        Iterable<Deposit> allDeposits = depositRepository.findByAccount(accountId);
+        List<Deposit> allDeposits = depositRepository.findByAccount(accountId);
         if(allDeposits == null){
             throw new ResourceNotFoundException("Account not found");
         }else
@@ -40,6 +42,7 @@ public class DepositService {
     public ResponseEntity<?> makeDeposit(Long accountId, Deposit deposit){
         Deposit newDeposit = depositRepository.save(deposit);
         return new ResponseEntity<>(newDeposit, HttpStatus.CREATED);
+        //for deposit type DEPOSIT
     }
 
     public ResponseEntity<?> updateDeposit(Long depositId, Deposit depositRequest){
@@ -56,11 +59,17 @@ public class DepositService {
         }).orElseThrow(() -> new ResourceNotFoundException("Deposit ID does not exist."));
     }
 
+    /**
+     * deleting deposit should reverse the process and result in a withdrawal
+     * @param depositId
+     * @return
+     */
     public ResponseEntity<?> deleteDeposit(Long depositId){
         Deposit depositToDelete = depositRepository.findById(depositId).orElse(null);
         if(depositToDelete == null){
             throw new ResourceNotFoundException("This id does not exist in deposits");
         }else
+            //perform the withdrawal here
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

@@ -2,7 +2,9 @@ package com.eldorado.El_Dorado.service;
 
 import com.eldorado.El_Dorado.domain.Bill;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
+import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.BillRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +13,14 @@ import java.util.Optional;
 
 @Service
 public class BillService {
+
+    @Autowired
+    private AccountRepo accountRepo;
     @Autowired
     private BillRepository billRepository;
-    public Bill createBill(Long accountId, Bill bill) {
+
+    @Transactional
+    public Bill createBill(Bill bill) {
         return billRepository.save(bill);
     }
 

@@ -7,6 +7,7 @@ import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
 public class Bill{
 
     //Variables
@@ -16,6 +17,7 @@ public class Bill{
     private Long billId;
     
     private Status billStatus;
+
     private String billPayee;
 
     private String nickName;
@@ -59,7 +61,6 @@ public class Bill{
     public void setBillPayee(String billPayee) {
         this.billPayee = billPayee;
     }
-
     public String getNickName() {
         return nickName;
     }
@@ -114,6 +115,7 @@ public class Bill{
     public void setAccount_id(Customer account_id) {
         this.account_id = account_id;
     }
+
 
     public Medium getMedium() {
         return medium;
