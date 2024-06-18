@@ -1,8 +1,5 @@
 package com.eldorado.El_Dorado.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +7,6 @@ import java.util.Set;
 @Entity
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
@@ -27,15 +22,19 @@ public class Customer {
     @OneToMany
     private Set<Address> address;
 
+
     @OneToMany
     private Set<Account> accounts;
 
     public Customer(Long id, String firstName, String lastName, Set<Address> address, Set<Account> accounts) {
+    public Customer(Long id, String firstName, String lastName, Set<Address> address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+
         this.accounts = accounts;
+
     }
 
     public Long getId() {
