@@ -36,7 +36,7 @@ public class BillController {
 //        return ResponseEntity.ok(billService.getBillsForAccount(accountId));
 //    }
 
-    @PostMapping("accounts/{accountId}/bills")
+    @PostMapping("accounts/{account_Id}/bills")
     public ResponseEntity<?> createBill(@PathVariable Long accountId, @RequestBody Bill bill) {
         Bill createdBill = billService.createBill(accountId, bill);
         billLogger.info("Created bill for account ID: {}", accountId);
