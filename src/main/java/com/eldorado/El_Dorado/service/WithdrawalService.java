@@ -4,6 +4,8 @@ import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.DepositRepository;
 import com.eldorado.El_Dorado.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,7 +33,7 @@ public class WithdrawalService {
         return withdrawalRepository.findById(id);
     }
 
-    public void updateWithdrawal(Long id, Withdrawal withdrawal) {
+    public ResponseEntity<?> updateWithdrawal(Long id, Withdrawal withdrawal) {
         verifyWithdrawal(id);
         Optional<Withdrawal> existingWithdrawal = withdrawalRepository.findById(id);
         if (existingWithdrawal.isPresent()) {
@@ -42,8 +44,9 @@ public class WithdrawalService {
             updatedWithdrawal.setAmount(withdrawal.getAmount());
             updatedWithdrawal.setDescription(withdrawal.getDescription());
             withdrawalRepository.save(updatedWithdrawal);
+            return new ResponseEntity(updatedWithdrawal, HttpStatus.ACCEPTED);
         }
-
+        return null;
     }
 
     public void deleteWithdrawalById(Long id) {

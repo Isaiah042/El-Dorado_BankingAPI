@@ -5,6 +5,7 @@ import com.eldorado.El_Dorado.repository.WithdrawalRepository;
 import com.eldorado.El_Dorado.service.WithdrawalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.eldorado.El_Dorado.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,7 @@ public class WithdrawalController extends WithdrawalService {
 
     @PutMapping("withdrawals/{withdrawalId}")
     public ResponseEntity<?> updateExistingWithdrawals(@PathVariable Long withdrawalId, @RequestBody Withdrawal withdrawal){
-        withdrawalService.updateWithdrawal(withdrawalId, withdrawal);
-        return null;
+        return ResponseHandler.responseBuilder("Accepted deposit modification", HttpStatus.ACCEPTED, withdrawalService.updateWithdrawal(withdrawalId, withdrawal));
     }
 
     //ResponseEntity<?>
