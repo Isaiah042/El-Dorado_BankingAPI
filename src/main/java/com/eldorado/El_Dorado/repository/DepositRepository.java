@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface DepositRepository extends CrudRepository<Deposit, Long> {
     @Query(value = "select d.* from deposit where depositId = ? and deposit.payee_id = account.accountId", nativeQuery = true)
-    Iterable<Deposit> findByAccount(Long accountId);
+    List<Deposit> findByAccount(Long accountId);
 }

@@ -1,25 +1,39 @@
 package com.eldorado.El_Dorado.domain;
 
+import com.eldorado.El_Dorado.domain.enums.Medium;
+import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
+
+/**
+ *
+ */
 
 
 @Entity
 public class Deposit {
     @Id
     @GeneratedValue
-    private Long id;     //deposit id
-    private TransactionType type;    //P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
-    private String transaction_date;
-    private String status;
-    private Long payee_id;  //accountId receiving deposit
-    private String medium;
+    private Long id;//deposit id
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;//P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
+
+    @CreationTimestamp
+    private Instant transaction_date;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    private Long payee_id;
+    @Enumerated(EnumType.STRING)//accountId receiving deposit
+    private Medium medium;
     private Double amount;
     private String description;
 
     //ability to deposit to a different account
 
-    public Deposit(Long id, TransactionType type, String transaction_date, String status, Long payee_id, String medium, Double amount, String description) {
+    public Deposit(Long id, TransactionType type, Instant transaction_date, Status status, Long payee_id, Medium medium, Double amount, String description) {
         this.id = id;
         this.type = type;
         this.transaction_date = transaction_date;
@@ -49,19 +63,19 @@ public class Deposit {
         this.type = type;
     }
 
-    public String getTransaction_date() {
+    public Instant getTransaction_date() {
         return transaction_date;
     }
 
-    public void setTransaction_date(String transaction_date) {
+    public void setTransaction_date(Instant transaction_date) {
         this.transaction_date = transaction_date;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -73,11 +87,11 @@ public class Deposit {
         this.payee_id = payee_id;
     }
 
-    public String getMedium() {
+    public Medium getMedium() {
         return medium;
     }
 
-    public void setMedium(String medium) {
+    public void setMedium(Medium medium) {
         this.medium = medium;
     }
 

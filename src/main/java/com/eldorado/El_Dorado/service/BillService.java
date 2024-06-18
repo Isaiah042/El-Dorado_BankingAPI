@@ -20,22 +20,25 @@ public class BillService {
     private BillRepository billRepository;
 
     @Transactional
-    public Bill createBill(Bill bill) {
+    public Bill createBill(Long accountId, Bill bill) {
         return billRepository.save(bill);
     }
 
     public Optional<Bill> getBillById(Long billID){
         return billRepository.findById(billID);
+
     }
 
-    public Iterable<Bill> getAllBills(){
-        return billRepository.findAll();
-    }
-
-    public void deleteBill(Long billID){
-        Bill currentBalance = billRepository.findById(billID)
-                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
-    }
+//    public Iterable<Bill> getAllBills(){
+//        return billRepository.findAll();
+//    }
+//    public Iterable<Bill> getBillsForAccount(Long accountId) {
+//        return billRepository.findByAccountId(accountId);
+//    }
+//    public void deleteBill(Long billID){
+//        Bill currentBalance = billRepository.findById(billID)
+//                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
+//    }
 
     protected void verifyBill(Long billId) throws ResourceNotFoundException{
         Optional<Bill> bill = billRepository.findById(billId);
@@ -44,7 +47,7 @@ public class BillService {
         }
     }
 
-    protected ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
+    public ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
      return billRepository.findById(billId).map(bill ->{
          bill.setNickName(updatedBill.getNickName());
          bill.setPayment_amount(updatedBill.getPayment_amount());

@@ -10,14 +10,25 @@ import jakarta.persistence.*;
 @Entity
 public class Account {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nickname;
+
     private Integer rewards;
+
     private Double balance;
 
+
+     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CUSTOMER_ID")
+
     private Customer customer;
+
+    @Enumerated(EnumType.STRING)
     private AccountType type;
+
+
 
     public Long getId() {
         return id;
