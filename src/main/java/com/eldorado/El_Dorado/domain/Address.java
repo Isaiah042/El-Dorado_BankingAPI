@@ -1,9 +1,7 @@
 package com.eldorado.El_Dorado.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -34,6 +32,8 @@ public class Address {
     @NotBlank(message = "Name cannot be blank")
     private String zip;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ADDRESS_ID")
     private Customer customer;
 
     public Long getId() {

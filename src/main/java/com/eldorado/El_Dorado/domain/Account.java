@@ -2,24 +2,32 @@ package com.eldorado.El_Dorado.domain;
 
 
 import com.eldorado.El_Dorado.domain.enums.AccountType;
-<<<<<<< HEAD
+
 import jakarta.persistence.Entity;
-=======
+
 import jakarta.persistence.*;
->>>>>>> dddf223d1c8079c5183d629edb84a99248e68ec5
+
 
 @Entity
 public class Account {
     @Id
     @GeneratedValue
     private Long id;
+
     private String nickname;
+
     private Integer rewards;
+
     private Double balance;
-    @ManyToOne
-    @JoinColumn
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ACCOUNT_ID")
     private Customer customer;
+
+    @Enumerated(EnumType.STRING)
     private AccountType type;
+
+
 
     public Long getId() {
         return id;
