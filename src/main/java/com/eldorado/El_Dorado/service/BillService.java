@@ -17,12 +17,6 @@ public class BillService {
         return billRepository.save(bill);
     }
 
-
-
-
-
-
-
     public Optional<Bill> getBillById(Long billID){
         return billRepository.findById(billID);
     }
@@ -48,7 +42,7 @@ public class BillService {
          bill.setNickName(updatedBill.getNickName());
          bill.setPayment_amount(updatedBill.getPayment_amount());
          bill.setBillStatus(updatedBill.getBillStatus());
-         bill.setPayee(updatedBill.getPayee());
+         bill.setBillPayee(updatedBill.getBillPayee());
          bill.setPayment_date(updatedBill.getPayment_date());
          bill.setUpcoming_payment_date(updatedBill.getUpcoming_payment_date());
         billRepository.save(bill);
