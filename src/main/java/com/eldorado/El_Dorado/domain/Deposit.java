@@ -8,6 +8,10 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
+/**
+ *
+ */
+
 
 @Entity
 public class Deposit {

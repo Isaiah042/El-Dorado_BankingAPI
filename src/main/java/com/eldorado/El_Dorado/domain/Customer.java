@@ -11,7 +11,6 @@ public class Customer {
 
     @Id
     @GeneratedValue
-
     private static long idCounter = 0;
     private Long id;
     private String firstName;
