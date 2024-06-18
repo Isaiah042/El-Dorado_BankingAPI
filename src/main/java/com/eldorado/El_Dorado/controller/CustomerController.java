@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+<<<<<<< HEAD
 
+=======
+>>>>>>> dddf223d1c8079c5183d629edb84a99248e68ec5
 @RestController
 public class CustomerController {
 

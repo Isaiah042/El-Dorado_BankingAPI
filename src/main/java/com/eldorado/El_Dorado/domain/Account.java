@@ -2,14 +2,22 @@ package com.eldorado.El_Dorado.domain;
 
 
 import com.eldorado.El_Dorado.domain.enums.AccountType;
+<<<<<<< HEAD
 import jakarta.persistence.Entity;
+=======
+import jakarta.persistence.*;
+>>>>>>> dddf223d1c8079c5183d629edb84a99248e68ec5
 
 @Entity
 public class Account {
+    @Id
+    @GeneratedValue
     private Long id;
     private String nickname;
     private Integer rewards;
     private Double balance;
+    @ManyToOne
+    @JoinColumn
     private Customer customer;
     private AccountType type;
 
