@@ -15,8 +15,7 @@ public class Bill{
     private Long BillId;
     
     private Status billStatus;
-    @ManyToOne
-    @JoinColumn
+
     private String billPayee;
 
     private String nickName;
