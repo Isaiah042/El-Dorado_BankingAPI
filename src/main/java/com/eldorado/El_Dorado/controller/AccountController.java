@@ -16,18 +16,17 @@ public class AccountController {
     private static final Logger accountLogger = LoggerFactory.getLogger(AccountController.class);
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
+    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
+        accountService.getAccountsById(accountId);
         return null;
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account) {
-    return null;
-    }
-    @PostMapping("/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+    public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account account) {
+        accountService.updateAccount(accountId, account);
         return null;
     }
+
 
 }
