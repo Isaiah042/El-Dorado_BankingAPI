@@ -1,7 +1,7 @@
 package com.eldorado.El_Dorado.domain;
 import com.eldorado.El_Dorado.domain.enums.Medium;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+
 import java.time.LocalDate;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
@@ -12,8 +12,7 @@ public class Bill{
 
     //Variables
     @Id
-    @GeneratedValue
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billId;
     
     private Status billStatus;
@@ -31,9 +30,9 @@ public class Bill{
     private String upcoming_payment_date;
 
     private Double payment_amount;
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Customer account_id;
+//    @ManyToOne
+//    @JoinColumn(name = "account_id")
+    private String account_id;
 
     @Enumerated(EnumType.STRING)
     private Medium medium;
@@ -108,11 +107,11 @@ public class Bill{
         this.payment_amount = payment_amount;
     }
 
-    public Customer getAccount_id() {
+    public String getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(Customer account_id) {
+    public void setAccount_id(String account_id) {
         this.account_id = account_id;
     }
 
