@@ -1,14 +1,10 @@
 package com.eldorado.El_Dorado.domain;
-
-
-
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import org.springframework.data.annotation.Id;
 import java.time.LocalDate;
-
 import com.eldorado.El_Dorado.domain.enums.Status;
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -20,16 +16,20 @@ public class Bill{
     private Long BillId;
     
     private Status billStatus;
+    private String billPayee;
+
+    @ManyToOne
+    @JoinColumn
     private String payee;
     private String nickName;
 
-    private LocalDateTime creation_date;
+    private String creation_date;
 
-    private LocalDateTime payment_date;
+    private String payment_date;
 
     private Integer recurring_date;
 
-    private LocalDate upcoming_payment_date;
+    private String upcoming_payment_date;
 
     private Double payment_amount;
 
@@ -67,27 +67,19 @@ public class Bill{
         this.nickName = nickName;
     }
 
-    public String getNickMame() {
-        return nickName;
-    }
-
-    public void setNickMame(String nickMame) {
-        this.nickName = nickMame;
-    }
-
-    public LocalDateTime getCreation_date() {
+    public String getCreation_date() {
         return creation_date;
     }
 
-    public void setCreation_date(LocalDateTime creation_date) {
+    public void setCreation_date(String creation_date) {
         this.creation_date = creation_date;
     }
 
-    public LocalDateTime getPayment_date() {
+    public String getPayment_date() {
         return payment_date;
     }
 
-    public void setPayment_date(LocalDateTime payment_date) {
+    public void setPayment_date(String payment_date) {
         this.payment_date = payment_date;
     }
 
@@ -99,11 +91,11 @@ public class Bill{
         this.recurring_date = recurring_date;
     }
 
-    public LocalDate getUpcoming_payment_date() {
+    public String getUpcoming_payment_date() {
         return upcoming_payment_date;
     }
 
-    public void setUpcoming_payment_date(LocalDate upcoming_payment_date) {
+    public void setUpcoming_payment_date(String upcoming_payment_date) {
         this.upcoming_payment_date = upcoming_payment_date;
     }
 
@@ -121,6 +113,22 @@ public class Bill{
 
     public void setAccount_id(Customer account_id) {
         this.account_id = account_id;
+    }
+
+    public String getBillPayee() {
+        return billPayee;
+    }
+
+    public void setBillPayee(String billPayee) {
+        this.billPayee = billPayee;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
 
