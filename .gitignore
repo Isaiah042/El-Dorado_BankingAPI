@@ -4,9 +4,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+<<<<<<< HEAD
 C:\Users\treyg\IdeaProjects\El-Dorado_BankingAPI\application.properties
 application.properties
 
+=======
+jetbrains://idea/navigate/reference?project=El-Dorado&path=application.properties
+>>>>>>> 3e9e363dcf7e330739ad9869366b4cf95bed763e
 ### STS ###
 .apt_generated
 .classpath

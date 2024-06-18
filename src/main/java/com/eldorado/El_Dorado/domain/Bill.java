@@ -1,9 +1,7 @@
 package com.eldorado.El_Dorado.domain;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import org.springframework.data.annotation.Id;
+import com.eldorado.El_Dorado.domain.enums.Medium;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
@@ -14,15 +12,13 @@ public class Bill{
 
     //Variables
     @Id
-    @GeneratedValue
-    private Long BillId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long billId;
     
     private Status billStatus;
+
     private String billPayee;
 
-    @ManyToOne
-    @JoinColumn
-    private String payee;
     private String nickName;
 
     private String creation_date;
@@ -34,15 +30,19 @@ public class Bill{
     private String upcoming_payment_date;
 
     private Double payment_amount;
+//    @ManyToOne
+//    @JoinColumn(name = "account_id")
+    private String account_id;
 
-    private Customer account_id;
+    @Enumerated(EnumType.STRING)
+    private Medium medium;
 
     public Long getBillId() {
-        return BillId;
+        return billId;
     }
 
     public void setBillId(Long billId) {
-        BillId = billId;
+        this.billId = billId;
     }
 
     public Status getBillStatus() {
@@ -53,10 +53,20 @@ public class Bill{
         this.billStatus = billStatus;
     }
 
+    public String getBillPayee() {
+        return billPayee;
+    }
+
+    public void setBillPayee(String billPayee) {
+        this.billPayee = billPayee;
+    }
     public String getNickName() {
         return nickName;
     }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
     public String getCreation_date() {
         return creation_date;
     }
@@ -97,25 +107,20 @@ public class Bill{
         this.payment_amount = payment_amount;
     }
 
-    public Customer getAccount_id() {
+    public String getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(Customer account_id) {
+    public void setAccount_id(String account_id) {
         this.account_id = account_id;
     }
 
-    public String getBillPayee() {
-        return billPayee;
+
+    public Medium getMedium() {
+        return medium;
     }
 
-    public void setBillPayee(String billPayee) {
-        this.billPayee = billPayee;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setMedium(Medium medium) {
+        this.medium = medium;
     }
 }
-
-

@@ -27,11 +27,11 @@ public class AccountController {
        return null;
     }
 
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
-        accountService.getAccountsById(accountId);
-        return null;
-    }
+//    @GetMapping("/accounts/{accountId}")
+//    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
+//        accountService.getAccountsById(accountId);
+//        return null;
+//    }
 
     @GetMapping("/customers/{customerId}/accounts")
     public ResponseEntity<Account>  getAccountsByCustomerId(@PathVariable Long customerId){
@@ -43,7 +43,6 @@ public class AccountController {
         accountService.deleteAccount(accountId);
         return null;
     }
-
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Account> verifyAccount(@PathVariable Long accountId){
         accountService.verifyAccount(accountId);

@@ -21,6 +21,7 @@ public class AccountService {
     public Account createAccount(Account account) {
         return accountRepo.save(account);
     }
+
     public Iterable<Account> getAllAccounts() {
         return accountRepo.findAll();
     }
@@ -29,9 +30,7 @@ public class AccountService {
         accountRepo.findById(accountId);
     }
 
-
-
-    public void getAccountsByCustomerId(Long customerId){
+    public void getAccountsByCustomerId(Long customerId) {
         customerRepo.findById(customerId);
     }
 
@@ -44,9 +43,9 @@ public class AccountService {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
-    public void verifyAccount(Long accountId){
+    public void verifyAccount(Long accountId) {
         Optional<Account> account = accountRepo.findById(accountId);
-        if(account.isEmpty()) {
+        if (account.isEmpty()) {
             throw new ResourceNotFoundException("Account with ID of #" + accountId + " does not exist!");
         }
     }
@@ -65,10 +64,7 @@ public class AccountService {
         ResponseEntity.notFound().build();
     }
 
-
 }
-
-  
 
 
 
