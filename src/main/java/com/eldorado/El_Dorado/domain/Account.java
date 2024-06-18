@@ -2,7 +2,9 @@ package com.eldorado.El_Dorado.domain;
 
 
 import com.eldorado.El_Dorado.domain.enums.AccountType;
+import jakarta.persistence.Entity;
 
+@Entity
 public class Account {
     private Long id;
     private String nickname;

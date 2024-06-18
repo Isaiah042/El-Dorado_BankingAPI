@@ -30,6 +30,7 @@ public class AccountService {
     }
 
 
+
     public void getAccountsByCustomerId(Long customerId){
         customerRepo.findById(customerId);
     }
@@ -67,10 +68,7 @@ public class AccountService {
 
 }
 
-    //Variables here FOLLOW THE BOOK
+  
 
-    //Put Account Methods in here
-
-    //Setters and Getters
 
 
