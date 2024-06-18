@@ -23,9 +23,9 @@ public class Customer {
     private String lastName;
 
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name= "CUSTOMER_ID")
-//    private Set<Address> addresses;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name= "CUSTOMER_ID")
+    private Set<Address> addresses;
 
 
 //    @OneToMany(mappedBy = "customer")
