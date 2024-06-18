@@ -30,11 +30,13 @@ public class BillController {
     }
 
 
-//    @GetMapping("accounts/{accountId}/bills")
-//    public ResponseEntity<?> getAllBills(@PathVariable Long accountId) {
-//        billLogger.info("Fetching all bills for account id {}", accountId);
-//        return ResponseEntity.ok(billService.getBillsForAccount(accountId));
-//    }
+
+@GetMapping("/accounts/{accountId}/bills")
+public ResponseEntity<?> getAllBills(@PathVariable Long accountId) {
+    billLogger.info("Fetching all bills for account id {}", accountId);
+    return ResponseEntity.ok(billService.getBillsForAccount(accountId));
+}
+
 
     @PostMapping("accounts/{account_Id}/bills")
     public ResponseEntity<?> createBill(@PathVariable Long accountId, @RequestBody Bill bill) {
@@ -43,13 +45,13 @@ public class BillController {
         return ResponseEntity.status(201).body(createdBill);
     }
 
-//
-//    @DeleteMapping("bills/{billId}")
-//    public ResponseEntity<?> deleteBill(@PathVariable Long billId) {
-//        billLogger.info("Deleting bill with ID: {}", billId);
-//        billService.deleteBill(billId);
-//        return ResponseEntity.noContent().build();
-//    }
+
+    @DeleteMapping("bills/{billId}")
+    public ResponseEntity<?> deleteBill(@PathVariable Long billId) {
+        billLogger.info("Deleting bill with ID: {}", billId);
+        billService.deleteBill(billId);
+        return ResponseEntity.noContent().build();
+    }
 
 
     @PutMapping("bills/{billId}")
