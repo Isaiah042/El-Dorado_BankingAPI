@@ -4,9 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-/Users/juan/IdeaProjects/El-Dorado_BankingAPI/application.properties
-application.properties
-
+jetbrains://idea/navigate/reference?project=El-Dorado&path=application.properties
 ### STS ###
 .apt_generated
 .classpath
