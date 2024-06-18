@@ -1,8 +1,10 @@
 package com.eldorado.El_Dorado.domain;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+@Entity
 public class Withdrawal {
 
     @Id
@@ -28,7 +30,7 @@ public class Withdrawal {
     }
 
     public Withdrawal() {
-        
+
     }
 
     public Long getId() {

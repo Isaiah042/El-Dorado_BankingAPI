@@ -1,9 +1,13 @@
 package com.eldorado.El_Dorado.service;
 
 import com.eldorado.El_Dorado.domain.Bill;
+import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class BillService {
@@ -13,23 +17,45 @@ public class BillService {
         return billRepository.save(bill);
     }
 
-    public Bill updateBill(Long billId, Bill billDetails) {
-        Bill bill = billRepository.findById(billId).orElse(null);
-        if (bill != null) {
-            bill.setBillStatus(billDetails.getBillStatus());
-            bill.setBillPayee(billDetails.getBillPayee());
-            bill.setNickName(billDetails.getNickName());
-            bill.setCreation_date(billDetails.getCreation_date());
-            bill.setPayment_date(billDetails.getPayment_date());
-            bill.setRecurring_date(billDetails.getRecurring_date());
-            bill.setUpcoming_payment_date(billDetails.getUpcoming_payment_date());
-            bill.setPayment_amount(billDetails.getPayment_amount());
-            return billRepository.save(bill);
-        }
-        return null;
+
+
+
+
+
+
+    public Optional<Bill> getBillById(Long billID){
+        return billRepository.findById(billID);
     }
 
-    public void deleteBill(Long billId) {
-        billRepository.deleteById(billId);
+    public Iterable<Bill> getAllBills(){
+        return billRepository.findAll();
     }
+
+    public void deleteBill(Long billID){
+        Bill currentBalance = billRepository.findById(billID)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
+    }
+
+    protected void verifyBill(Long billId) throws ResourceNotFoundException{
+        Optional<Bill> bill = billRepository.findById(billId);
+        if (bill.isEmpty()){
+            throw new ResourceNotFoundException("Bill with id " + billId + "does not exist");
+        }
+    }
+
+    protected ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
+     return billRepository.findById(billId).map(bill ->{
+         bill.setNickName(updatedBill.getNickName());
+         bill.setPayment_amount(updatedBill.getPayment_amount());
+         bill.setBillStatus(updatedBill.getBillStatus());
+         bill.setPayee(updatedBill.getPayee());
+         bill.setPayment_date(updatedBill.getPayment_date());
+         bill.setUpcoming_payment_date(updatedBill.getUpcoming_payment_date());
+        billRepository.save(bill);
+        return new ResponseEntity(bill, HttpStatus.OK);
+    }
+    ).orElseThrow(() -> new ResourceNotFoundException("Bill Id " + billId + " doesn't exist."));
+        }
 }
+
+

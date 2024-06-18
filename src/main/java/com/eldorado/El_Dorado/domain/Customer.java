@@ -1,8 +1,16 @@
 package com.eldorado.El_Dorado.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import org.springframework.data.annotation.Id;
+
 import java.util.Set;
 
+@Entity
 public class Customer {
+
+    @Id
+    @GeneratedValue
 
     private static long idCounter = 0;
     private Long id;
@@ -23,6 +31,14 @@ public class Customer {
 
     public Long getId() {
         return id;
+    }
+
+    public static void setIdCounter(long idCounter) {
+        Customer.idCounter = idCounter;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
