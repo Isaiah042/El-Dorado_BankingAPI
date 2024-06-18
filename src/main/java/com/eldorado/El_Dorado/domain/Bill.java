@@ -1,16 +1,10 @@
 package com.eldorado.El_Dorado.domain;
-
-
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import org.springframework.data.annotation.Id;
 import java.time.LocalDate;
-
 import com.eldorado.El_Dorado.domain.enums.Status;
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,6 +16,7 @@ public class Bill{
     private Long BillId;
     
     private Status billStatus;
+    private String billPayee;
 
     @ManyToOne
     @JoinColumn
@@ -118,6 +113,22 @@ public class Bill{
 
     public void setAccount_id(Customer account_id) {
         this.account_id = account_id;
+    }
+
+    public String getBillPayee() {
+        return billPayee;
+    }
+
+    public void setBillPayee(String billPayee) {
+        this.billPayee = billPayee;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
 
