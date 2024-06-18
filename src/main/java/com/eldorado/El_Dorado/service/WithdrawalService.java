@@ -24,8 +24,8 @@ public class WithdrawalService {
         withdrawalRepository.save(withdrawal);
     }
 
-    public Iterable<Withdrawal> getAllWithdrawals() {
-        return (List<Withdrawal>) withdrawalRepository.findAll();
+    public Iterable<Withdrawal> getAllWithdrawals(Long accountId) {
+        return withdrawalRepository.findAll();
     }
 
     public Optional<Withdrawal> getWithdrawalById(Long id) {
