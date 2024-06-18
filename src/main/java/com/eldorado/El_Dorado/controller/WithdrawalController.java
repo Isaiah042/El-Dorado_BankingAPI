@@ -2,12 +2,9 @@ package com.eldorado.El_Dorado.controller;
 
 import com.eldorado.El_Dorado.domain.Withdrawal;
 import com.eldorado.El_Dorado.repository.WithdrawalRepository;
-<<<<<<< HEAD
 import com.eldorado.El_Dorado.service.WithdrawalService;
-=======
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
->>>>>>> f51594963182864abae3d23f68d4d2ff21fac4e2
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +20,10 @@ import java.util.Optional;
 public class WithdrawalController extends WithdrawalService {
 
     @Autowired
-<<<<<<< HEAD
     private WithdrawalService withdrawalService;
-=======
     private WithdrawalRepository withdrawalRepository;
   
     private static final Logger withdrawalLogger = LoggerFactory.getLogger(WithdrawalController.class);
->>>>>>> f51594963182864abae3d23f68d4d2ff21fac4e2
     @GetMapping("accounts/{accountId}/withdrawals")
     public Optional<Withdrawal> getAllAccountWithdrawalsByAccountId(@PathVariable Long accountId){
         return withdrawalService.getWithdrawalById(accountId);

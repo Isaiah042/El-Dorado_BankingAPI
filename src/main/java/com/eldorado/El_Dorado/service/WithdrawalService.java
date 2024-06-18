@@ -48,7 +48,6 @@ public class WithdrawalService {
 
     public void deleteWithdrawalById(Long id) {
         verifyWithdrawal(id);
-
         withdrawalRepository.deleteById(id);
     }
 
