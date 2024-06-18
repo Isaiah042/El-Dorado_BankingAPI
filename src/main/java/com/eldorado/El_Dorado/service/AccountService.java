@@ -29,10 +29,6 @@ public class AccountService {
     }
 
 
-    //Variables here FOLLOW THE BOOK
 
-    //Put Account Methods in here
-
-    //Setters and Getters
 
 }
