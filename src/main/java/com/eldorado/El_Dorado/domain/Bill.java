@@ -1,4 +1,5 @@
 package com.eldorado.El_Dorado.domain;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -8,6 +9,7 @@ import com.eldorado.El_Dorado.domain.enums.Status;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
 public class Bill{
 
     //Variables
@@ -51,20 +53,8 @@ public class Bill{
         this.billStatus = billStatus;
     }
 
-    public String getPayee() {
-        return payee;
-    }
-
-    public void setPayee(String payee) {
-        this.payee = payee;
-    }
-
     public String getNickName() {
         return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
     }
 
     public String getCreation_date() {
@@ -121,10 +111,6 @@ public class Bill{
 
     public void setBillPayee(String billPayee) {
         this.billPayee = billPayee;
-    }
-
-    public String getNickName() {
-        return nickName;
     }
 
     public void setNickName(String nickName) {
