@@ -25,16 +25,17 @@ public class BillController {
     @GetMapping("/bills/{billId}")
     public ResponseEntity<?> getBillById(@PathVariable Long billId) {
         billLogger.info("Fetching bill with id {}", billId);
-        return ResponseEntity.ok(billService.getBillById(billId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bill not found for ID: " + billId)));
+        billService.getBillById(billId);
+        return null;
     }
 
 
-//    @GetMapping("accounts/{accountId}/bills")
-//    public ResponseEntity<?> getAllBills(@PathVariable Long accountId) {
-//        billLogger.info("Fetching all bills for account id {}", accountId);
-//        return ResponseEntity.ok(billService.getBillsForAccount(accountId));
-//    }
+    @GetMapping("accounts/{accountId}/bills")
+    public ResponseEntity<?> getAllBills(@PathVariable Long accountId) {
+        billLogger.info("Fetching all bills for account id {}", accountId);
+        billService.getBillsForAccount(accountId);
+        return null;
+    }
 
     @PostMapping("accounts/{accountId}/bills")
     public ResponseEntity<?> createBill(@PathVariable Long accountId, @RequestBody Bill bill) {

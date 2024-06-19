@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,17 +26,23 @@ public class BillService {
         return billRepository.save(bill);
     }
 
-    public Optional<Bill> getBillById(Long billID){
-        return billRepository.findById(billID);
+    public ResponseEntity<?> getBillById(Long billID){
+        Bill getBill = billRepository.findById(billID).orElse(null);
+        if (getBill == null){
+            throw new ResourceNotFoundException("Error getting bill ID");
+        }else return new ResponseEntity<>(billID, HttpStatus.OK);
 
     }
 
-//    public Iterable<Bill> getAllBills(){
-//        return billRepository.findAll();
-//    }
-//    public Iterable<Bill> getBillsForAccount(Long accountId) {
-//        return billRepository.findByAccountId(accountId);
-//    }
+    public ResponseEntity<?> getAllBills(Long accountId){
+        List<Bill> allBills = billRepository.findByAccountId(accountId);
+        if(allBills == null){
+            throw new ResourceNotFoundException("Account can't be find");
+        }else return new ResponseEntity<>(allBills,HttpStatus.OK);
+    }
+    public void getBillsForAccount(Long accountId) {
+         billRepository.findById(accountId);
+    }
 //    public void deleteBill(Long billID){
 //        Bill currentBalance = billRepository.findById(billID)
 //                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
