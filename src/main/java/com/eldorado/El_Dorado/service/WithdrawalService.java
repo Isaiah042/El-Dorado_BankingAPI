@@ -24,8 +24,8 @@ public class WithdrawalService {
         withdrawalRepository.save(withdrawal);
     }
 
-    public Iterable<Withdrawal> getAllWithdrawals(Long accountId) {
-        return withdrawalRepository.findAll();
+    public ResponseEntity<?> getAllWithdrawals(Long accountId) {
+        return new ResponseEntity<>(withdrawalRepository.findAll(), HttpStatus.OK);
     }
 
     public Optional<Withdrawal> getWithdrawalById(Long id) {
@@ -60,5 +60,4 @@ public class WithdrawalService {
             throw new ResourceNotFoundException("Withdrawal with id " + withdrawalId + " not found");
         }
     }
-
 }

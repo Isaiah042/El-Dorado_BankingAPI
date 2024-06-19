@@ -38,7 +38,7 @@ public class WithdrawalController extends WithdrawalService {
     @PostMapping("accounts/{accountId}/withdrawals")
     public ResponseEntity<?> makeNewWithdrawal(Withdrawal withdrawal){
         withdrawalService.saveWithdrawal(withdrawal);
-        return null;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("withdrawals/{withdrawalId}")
@@ -50,7 +50,7 @@ public class WithdrawalController extends WithdrawalService {
     @DeleteMapping("withdrawals/{withdrawalId}")
     public ResponseEntity<?> deleteExistingWithdrawal (@PathVariable Long withdrawalId){
         withdrawalService.deleteWithdrawalById(withdrawalId);
-        return null;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
