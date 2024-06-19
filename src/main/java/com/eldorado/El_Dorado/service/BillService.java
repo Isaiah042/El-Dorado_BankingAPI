@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BillService {
@@ -21,24 +22,32 @@ public class BillService {
 
     @Transactional
     public Bill createBill(Long accountId, Bill bill) {
+        bill.setAccount_id(accountId.toString());
         return billRepository.save(bill);
     }
 
     public Optional<Bill> getBillById(Long billID){
-        return billRepository.findById(billID);
+        return Optional.ofNullable(billRepository.findById(billID).orElseThrow(() -> new ResourceNotFoundException("Bill not found for ID: " + billID)));
 
     }
 
 //    public Iterable<Bill> getAllBills(){
 //        return billRepository.findAll();
 //    }
-//    public Iterable<Bill> getBillsForAccount(Long accountId) {
-//        return billRepository.findByAccountId(accountId);
-//    }
-//    public void deleteBill(Long billID){
-//        Bill currentBalance = billRepository.findById(billID)
-//                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
-//    }
+
+
+
+    public Iterable<Bill> getBillsForAccount(Long accountId) {
+        return billRepository.findAll().stream()
+                .filter(bill -> accountId.toString().equals(bill.getAccount_id()))
+                .collect(Collectors.toList());
+    }
+
+public void deleteBill(Long billId) {
+    Bill bill = billRepository.findById(billId)
+            .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billId + " does not exist"));
+    billRepository.delete(bill);
+}
 
     protected void verifyBill(Long billId) throws ResourceNotFoundException{
         Optional<Bill> bill = billRepository.findById(billId);
