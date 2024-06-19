@@ -1,11 +1,8 @@
 package com.eldorado.El_Dorado.domain;
 import com.eldorado.El_Dorado.domain.enums.Medium;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
 import com.eldorado.El_Dorado.domain.enums.Status;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 public class Bill{
@@ -14,7 +11,7 @@ public class Bill{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billId;
-    
+    @Enumerated(EnumType.STRING)
     private Status billStatus;
 
     private String billPayee;
@@ -30,8 +27,7 @@ public class Bill{
     private String upcoming_payment_date;
 
     private Double payment_amount;
-//    @ManyToOne
-//    @JoinColumn(name = "account_id")
+
     private String account_id;
 
     @Enumerated(EnumType.STRING)
@@ -60,6 +56,7 @@ public class Bill{
     public void setBillPayee(String billPayee) {
         this.billPayee = billPayee;
     }
+
     public String getNickName() {
         return nickName;
     }
@@ -67,6 +64,7 @@ public class Bill{
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
+
     public String getCreation_date() {
         return creation_date;
     }
