@@ -21,22 +21,13 @@ public class DepositService {
         this.depositRepository = depositRepository;
     }
 
-
-
-    public ResponseEntity<?> getAllDeposits(Long accountId){
-        List<Deposit> allDeposits = depositRepository.findByAccount(accountId);
-        if(allDeposits == null){
-            throw new ResourceNotFoundException("Account not found");
-        }else
-            return new ResponseEntity<>(allDeposits, HttpStatus.OK);
+    public Iterable<Deposit> getAllDeposits(Long accountId){
+        return depositRepository.findByAccount(accountId);
     }
 
-    public ResponseEntity<?> getById(Long depositId){
-        Deposit foundDeposit = depositRepository.findById(depositId).orElse(null);
-        if(foundDeposit == null){
-            throw new ResourceNotFoundException("Error fetching deposit with id");
-        } else
-            return new ResponseEntity<>(foundDeposit, HttpStatus.OK);
+    public Deposit getById(Long depositId){
+        verifyDeposit(depositId);
+        return depositRepository.findById(depositId).orElse(null);
     }
 
     public ResponseEntity<?> makeDeposit(Long accountId, Deposit deposit){
@@ -46,6 +37,8 @@ public class DepositService {
     }
 
     public ResponseEntity<?> updateDeposit(Long depositId, Deposit depositRequest){
+        verifyDeposit(depositId);
+
         return depositRepository.findById(depositId).map(deposit ->{
             deposit.setType(depositRequest.getType());
             deposit.setTransaction_date(depositRequest.getTransaction_date());
@@ -63,6 +56,13 @@ public class DepositService {
      * deleting deposit should reverse the process and result in a withdrawal
      * @param depositId
      * @return
+     *
+     * protected void verifyPoll(Long id) throws ResourceNotFoundException{
+     *         Poll poll = pollRepository.findById(id).orElse(null);
+     *         if(poll == null){
+     *             throw new ResourceNotFoundException("Poll with id " + id + " not found");
+     *         }
+     *     }
      */
     public ResponseEntity<?> deleteDeposit(Long depositId){
         Deposit depositToDelete = depositRepository.findById(depositId).orElse(null);
@@ -71,5 +71,12 @@ public class DepositService {
         }else
             //perform the withdrawal here
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    protected void verifyDeposit(Long depositId){
+        Deposit deposit = depositRepository.findById(depositId).orElse(null);
+        if(deposit == null){
+            throw new ResourceNotFoundException("Deposit with id " + depositId + " not found");
+        }
     }
 }

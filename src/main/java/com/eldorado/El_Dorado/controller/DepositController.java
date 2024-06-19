@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class DepositController {
 
@@ -21,21 +23,37 @@ public class DepositController {
     public DepositController(DepositService depositService){
         this.depositService = depositService;
     }
-
     private static final Logger depositLogger = LoggerFactory.getLogger(DepositController.class);
 
 
 
     @GetMapping("accounts/{accountId}/deposits")
     public ResponseEntity<?> getAllAccountDeposits(@PathVariable Long accountId){
-        depositService.getAllDeposits(accountId);
-        return null;
+        Iterable<Deposit> allDeposits = depositService.getAllDeposits(accountId);
+        if(allDeposits == null)
+            return ResponseHandler.responseBuilder(
+                    "Account(s) not found",
+                    HttpStatus.NOT_FOUND,
+                    null);
+        return ResponseHandler.responseBuilder(
+                "Success",
+                HttpStatus.OK,
+                allDeposits);
     }
 
     @GetMapping("/deposits/{depositId}")
     public ResponseEntity<?> getDepositById(@PathVariable Long depositId){
-        depositService.getById(depositId);
-        return null;
+        Deposit deposit = depositService.getById(depositId);
+        if(deposit == null)
+            return ResponseHandler.responseBuilder(
+                    "Error fetching deposit with id: " + depositId,
+                    HttpStatus.NOT_FOUND,
+                    null);
+
+        return ResponseHandler.responseBuilder(
+                "Success",
+                HttpStatus.OK,
+                deposit);
     }
 
     @PostMapping("accounts/{accountId}/deposits")
@@ -71,6 +89,17 @@ public class DepositController {
      * PUT Update a specified existing deposit
      *
      * DELETE Delete a specific existing deposit
+     *
+     *
+     * @GetMapping("/{id}")
+     * public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
+     *    Employee emp = employeeService.findEmployeeById(id);
+     *    if(emp != null)
+     *         return ResponseEntity.status(HttpStatus.OK).body(emp);
+     *    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+     * }
      */
+
+
 
 }
