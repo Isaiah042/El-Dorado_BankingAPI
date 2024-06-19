@@ -1,10 +1,13 @@
 package com.eldorado.El_Dorado.controller;
 
+import com.eldorado.El_Dorado.domain.Customer;
 import com.eldorado.El_Dorado.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.eldorado.El_Dorado.domain.Account;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,31 +25,25 @@ public class AccountController {
         return accountService.createAccount(account);
     }
     @GetMapping("/accounts")
-    public ResponseEntity<Account>  getAllAccounts() {
-       accountService.getAllAccounts();
-       return null;
+    public Iterable<Account>  getAllAccounts() {
+        return  accountService.getAllAccounts();
+
     }
 
-//    @GetMapping("/accounts/{accountId}")
-//    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
-//        accountService.getAccountsById(accountId);
-//        return null;
-//    }
+    @GetMapping("/accounts/{accountId}")
+    public ResponseEntity<Account> AccountById(@PathVariable Long accountId) {
+       return new ResponseEntity<>(accountService.getAccountsById(accountId),HttpStatus.OK);
+    }
 
     @GetMapping("/customers/{customerId}/accounts")
-    public ResponseEntity<Account>  getAccountsByCustomerId(@PathVariable Long customerId){
-        accountService.getAccountsByCustomerId(customerId);
-        return null;
+    public Iterable<Account> getAccountsByCustomerId(@PathVariable Long customerId){
+        Iterable<Account> accounts = accountService.getAccountsByCustomerId(customerId);
+        return accounts;
     }
     @DeleteMapping("/accounts/{accountId}")
-    public ResponseEntity<Account> deleteAccountById(@PathVariable Long accountId, @RequestBody Account account){
-        accountService.deleteAccount(accountId);
-        return null;
-    }
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<Account> verifyAccount(@PathVariable Long accountId){
-        accountService.verifyAccount(accountId);
-        return null;
+    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId, @RequestBody Account account){
+        return accountService.deleteAccount(accountId);
+
     }
 
     @PutMapping("/accounts/{accountId}")

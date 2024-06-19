@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BillService {
@@ -23,51 +24,60 @@ public class BillService {
 
     @Transactional
     public Bill createBill(Long accountId, Bill bill) {
+        bill.setAccount_id(accountId.toString());
         return billRepository.save(bill);
     }
 
-    public ResponseEntity<?> getBillById(Long billID){
+    public ResponseEntity<?> getBillById(Long billID) {
         Bill getBill = billRepository.findById(billID).orElse(null);
-        if (getBill == null){
+        if (getBill == null) {
             throw new ResourceNotFoundException("Error getting bill ID");
-        }else return new ResponseEntity<>(billID, HttpStatus.OK);
-
+        } else return new ResponseEntity<>(billID, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllBills(Long accountId){
-        List<Bill> allBills = billRepository.findByAccountId(accountId);
-        if(allBills == null){
-            throw new ResourceNotFoundException("Account can't be find");
-        }else return new ResponseEntity<>(allBills,HttpStatus.OK);
+    public ResponseEntity<?> getAllBills(Long accountId) {
+        List<Bill> allBills = billRepository.findAll();
+        return new ResponseEntity<>(allBills, HttpStatus.OK);
     }
+
     public void getBillsForAccount(Long accountId) {
-         billRepository.findById(accountId);
+        billRepository.findById(accountId);
     }
-//    public void deleteBill(Long billID){
-//        Bill currentBalance = billRepository.findById(billID)
-//                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billID + " does not exist :)"));
+
+//    public Optional<Bill> getBillById(Long billID) {
+//        return Optional.ofNullable(billRepository.findById(billID).orElseThrow(() -> new ResourceNotFoundException("Bill not found for ID: " + billID)));
 //    }
 
-    protected void verifyBill(Long billId) throws ResourceNotFoundException{
-        Optional<Bill> bill = billRepository.findById(billId);
-        if (bill.isEmpty()){
-            throw new ResourceNotFoundException("Bill with id " + billId + "does not exist");
-        }
+//    public Iterable<Bill> getAllBills(){
+//        return billRepository.findAll();
+//    }
+
+    public void deleteBill(Long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bill with id " + billId + " does not exist"));
+        billRepository.delete(bill);
     }
 
-    public ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
-     return billRepository.findById(billId).map(bill ->{
-         bill.setNickName(updatedBill.getNickName());
-         bill.setPayment_amount(updatedBill.getPayment_amount());
-         bill.setBillStatus(updatedBill.getBillStatus());
-         bill.setBillPayee(updatedBill.getBillPayee());
-         bill.setPayment_date(updatedBill.getPayment_date());
-         bill.setUpcoming_payment_date(updatedBill.getUpcoming_payment_date());
-        billRepository.save(bill);
-        return new ResponseEntity(bill, HttpStatus.OK);
-    }
-    ).orElseThrow(() -> new ResourceNotFoundException("Bill Id " + billId + " doesn't exist."));
+        protected void verifyBill (Long billId) throws ResourceNotFoundException {
+            Optional<Bill> bill = billRepository.findById(billId);
+            if (bill.isEmpty()) {
+                throw new ResourceNotFoundException("Bill with id " + billId + "does not exist");
+            }
         }
-}
+
+        public ResponseEntity<?> updateBill(Long billId, Bill updatedBill){
+            return billRepository.findById(billId).map(bill -> {
+                        bill.setNickName(updatedBill.getNickName());
+                        bill.setPayment_amount(updatedBill.getPayment_amount());
+                        bill.setBillStatus(updatedBill.getBillStatus());
+                        bill.setBillPayee(updatedBill.getBillPayee());
+                        bill.setPayment_date(updatedBill.getPayment_date());
+                        bill.setUpcoming_payment_date(updatedBill.getUpcoming_payment_date());
+                        billRepository.save(bill);
+                        return new ResponseEntity(bill, HttpStatus.OK);
+                    }
+            ).orElseThrow(() -> new ResourceNotFoundException("Bill Id " + billId + " doesn't exist."));
+        }
+    }
 
 
