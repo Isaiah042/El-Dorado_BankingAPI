@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
 
+
 @Entity
 public class Account {
     @Id
@@ -18,8 +19,10 @@ public class Account {
 
     private Double balance;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+
+     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CUSTOMER_ID")
+
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
