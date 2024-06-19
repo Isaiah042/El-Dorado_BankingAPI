@@ -3,15 +3,13 @@ package com.eldorado.El_Dorado.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-
-
 import java.util.Set;
 
 @Entity
 public class Customer {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @NotEmpty
@@ -21,7 +19,6 @@ public class Customer {
     @NotEmpty
     @Column(name = "lastName")
     private String lastName;
-
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name= "CUSTOMER_ID")
@@ -35,6 +32,7 @@ public class Customer {
     }
 
     public Customer(Long id, String firstName, String lastName) {
+
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,6 +64,11 @@ public class Customer {
         this.lastName = lastName;
     }
 
+
+
+
+
+
 //    public Set<Address> getAddresses() {
 //        return addresses;
 //    }
@@ -81,4 +84,5 @@ public class Customer {
 //    public void setAccounts(Set<Account> accounts) {
 //        this.accounts = accounts;
 //    }
+
 }

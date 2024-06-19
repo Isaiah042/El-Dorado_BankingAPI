@@ -1,6 +1,7 @@
 package com.eldorado.El_Dorado.service;
 
 import com.eldorado.El_Dorado.domain.Account;
+
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.CustomerRepo;
@@ -26,16 +27,16 @@ public class AccountService {
         return accountRepo.findAll();
     }
 
-    public void getAccountsById(Long accountId) {
-        accountRepo.findById(accountId);
+    public Account getAccountsById(Long accountId) {
+       return accountRepo.findById(accountId).orElse(null);
     }
 
-    public void getAccountsByCustomerId(Long customerId) {
-        customerRepo.findById(customerId);
+    public Iterable<Account> getAccountsByCustomerId(Long customerId) {
+        return (Iterable<Account>) accountRepo.findById(customerId).orElse(null);
     }
 
 
-    public ResponseEntity<Object> deleteAccount(@PathVariable Long accountId) {
+    public ResponseEntity<?> deleteAccount(Long accountId) {
         return accountRepo.findById(accountId)
                 .map(account -> {
                     accountRepo.delete(account);
