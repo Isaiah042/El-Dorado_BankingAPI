@@ -41,7 +41,7 @@ public class AccountController {
         return accounts;
     }
     @DeleteMapping("/accounts/{accountId}")
-    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId, @RequestBody Account account){
+    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId){
         return accountService.deleteAccount(accountId);
 
     }
