@@ -27,20 +27,21 @@ public class CustomerController {
 
         Optional<Customer> customer = customerService.getCustomerByAccountId(accountId);
 
-        if(customer == null){
+        if(customer.isEmpty())
             return ResponseHandler.responseBuilder(
-                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND, null);
-        }else
+                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND);
+        else
             return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customer);
     }
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<?> getCustomerByCustomerId(@PathVariable Long customerId) {
+
         Optional<Customer> customer = customerService.getCustomerByCustomerId(customerId);
 
         if(customer == null){
             return ResponseHandler.responseBuilder(
-                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND, null);
+                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND);
         }else
             return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customer);
     }
@@ -85,8 +86,7 @@ public class CustomerController {
                 customerService.deleteCustomer(customerId);
                 return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customerId);
             } catch (Exception e) {
-                return ResponseHandler.responseBuilder(
-                        "Error.", HttpStatus.NOT_FOUND, null);
+                return ResponseHandler.responseBuilder("Error.", HttpStatus.NOT_FOUND, null);
             }
     }
 }
