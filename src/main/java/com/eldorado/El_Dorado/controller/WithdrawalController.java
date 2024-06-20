@@ -47,10 +47,10 @@ public class WithdrawalController extends WithdrawalService {
     }
 
     //ResponseEntity<?>
-    @DeleteMapping("withdrawals/{withdrawalId}")
-    public ResponseEntity<?> deleteExistingWithdrawal (@PathVariable Long withdrawalId){
-        withdrawalService.deleteWithdrawalById(withdrawalId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//    @DeleteMapping("withdrawals/{withdrawalId}")
+//    public ResponseEntity<?> deleteExistingWithdrawal (@PathVariable Long withdrawalId){
+//        withdrawalService.deleteWithdrawalById(withdrawalId);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
 }

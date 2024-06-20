@@ -1,5 +1,6 @@
 package com.eldorado.El_Dorado.domain;
 
+import com.eldorado.El_Dorado.domain.enums.Medium;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
@@ -14,11 +15,11 @@ public class Withdrawal {
     private String transaction_date;
     private String status;
     private Long payer_id;
-    private String medium;
+    private Medium medium;
     private Double amount;
     private String description;
 
-    public Withdrawal(Long id, String type, String transaction_date, String status, Long payer_id, String medium, Double amount, String description) {
+    public Withdrawal(Long id, String type, String transaction_date, String status, Long payer_id, Medium medium, Double amount, String description) {
         this.id = id;
         this.type = type;
         this.transaction_date = transaction_date;
@@ -73,11 +74,11 @@ public class Withdrawal {
         this.payer_id = payer_id;
     }
 
-    public String getMedium() {
+    public Medium getMedium() {
         return medium;
     }
 
-    public void setMedium(String medium) {
+    public void setMedium(Medium medium) {
         this.medium = medium;
     }
 

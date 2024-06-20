@@ -49,10 +49,10 @@ public class WithdrawalService {
         return null;
     }
 
-    public void deleteWithdrawalById(Long id) {
-        verifyWithdrawal(id);
-        withdrawalRepository.deleteById(id);
-    }
+//    public void deleteWithdrawalById(Long id) {
+//        verifyWithdrawal(id);
+//        withdrawalRepository.deleteById(id);
+//    }
 
     public void verifyWithdrawal(Long withdrawalId) throws ResourceNotFoundException {
         Withdrawal w = withdrawalRepository.findById(withdrawalId).orElse(null);
