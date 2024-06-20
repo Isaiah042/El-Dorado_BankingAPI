@@ -4,6 +4,7 @@ import com.eldorado.El_Dorado.domain.enums.Medium;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.time.Instant;
 public class Deposit {
     @Id
     @GeneratedValue
+    @Column(name = "DEPOSIT_ID")
     private Long id;//deposit id
     @Enumerated(EnumType.STRING)
     private TransactionType type;//P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
@@ -25,9 +27,11 @@ public class Deposit {
     private Instant transaction_date;
     @Enumerated(EnumType.STRING)
     private Status status;
+
     private Long payee_id;
     @Enumerated(EnumType.STRING)//accountId receiving deposit
     private Medium medium;
+    @NotNull
     private Double amount;
     private String description;
 
