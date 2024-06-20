@@ -4,9 +4,11 @@ import com.eldorado.El_Dorado.domain.enums.Medium;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -17,26 +19,29 @@ import java.time.Instant;
 public class Deposit {
     @Id
     @GeneratedValue
+    @Column(name = "DEPOSIT_ID")
     private Long id;//deposit id
     @Enumerated(EnumType.STRING)
     private TransactionType type;//P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
 
     @CreationTimestamp
-    private Instant transaction_date;
+    private LocalDateTime transaction_date;
     @Enumerated(EnumType.STRING)
     private Status status;
+
     private Long payee_id;
     @Enumerated(EnumType.STRING)//accountId receiving deposit
     private Medium medium;
+    @NotNull
     private Double amount;
     private String description;
 
     //ability to deposit to a different account
 
-    public Deposit(Long id, TransactionType type, Instant transaction_date, Status status, Long payee_id, Medium medium, Double amount, String description) {
+    public Deposit(Long id, TransactionType type, Status status, Long payee_id, Medium medium, Double amount, String description) {
         this.id = id;
         this.type = type;
-        this.transaction_date = transaction_date;
+        this.transaction_date = LocalDateTime.now();
         this.status = status;
         this.payee_id = payee_id;
         this.medium = medium;
@@ -63,11 +68,11 @@ public class Deposit {
         this.type = type;
     }
 
-    public Instant getTransaction_date() {
+    public LocalDateTime getTransaction_date() {
         return transaction_date;
     }
 
-    public void setTransaction_date(Instant transaction_date) {
+    public void setTransaction_date(LocalDateTime transaction_date) {
         this.transaction_date = transaction_date;
     }
 
