@@ -20,7 +20,7 @@ public class AccountController {
 
     private static final Logger accountLogger = LoggerFactory.getLogger(AccountController.class);
 
-    @PostMapping("/accounts")
+    @PostMapping("/customers/{customerId}/accounts")
     public Account createAccount(@RequestBody Account account) {
         return accountService.createAccount(account);
     }
@@ -36,8 +36,8 @@ public class AccountController {
     }
 
     @GetMapping("/customers/{customerId}/accounts")
-    public Iterable<Account> getAccountsByCustomerId(@PathVariable Long customerId){
-        Iterable<Account> accounts = accountService.getAccountsByCustomerId(customerId);
+    public List<Account> getAccountsByCustomerId(@PathVariable Long customerId){
+        List<Account> accounts = accountService.getAccountsByCustomerId(customerId);
         return accounts;
     }
     @DeleteMapping("/accounts/{accountId}")
@@ -48,8 +48,8 @@ public class AccountController {
 
     @PutMapping("/accounts/{accountId}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account account) {
-        accountService.updateAccount(accountId, account);
-        return null;
+       return accountService.updateAccount(accountId, account);
+
     }
 
 
