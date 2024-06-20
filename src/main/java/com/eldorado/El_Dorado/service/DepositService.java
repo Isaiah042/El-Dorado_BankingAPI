@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,7 +54,7 @@ public class DepositService {
         verifyDeposit(depositId);
         return depositRepository.findById(depositId).map(deposit ->{
             deposit.setType(depositRequest.getType());
-            deposit.setTransaction_date(depositRequest.getTransaction_date());
+            deposit.setTransaction_date(LocalDateTime.now());
             deposit.setStatus(depositRequest.getStatus());
             deposit.setPayee_id(depositRequest.getPayee_id());
             deposit.setMedium(depositRequest.getMedium());

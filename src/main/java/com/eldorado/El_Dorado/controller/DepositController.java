@@ -33,7 +33,7 @@ public class DepositController {
         Iterable<Deposit> allDeposits = depositService.getAllDeposits(accountId);
         if(!allDeposits.iterator().hasNext())
             return ResponseHandler.responseBuilder(
-                    "Account(s) not found",
+                    "Account not found",
                     HttpStatus.NOT_FOUND);
         return ResponseHandler.responseBuilder(
                 "Success",
