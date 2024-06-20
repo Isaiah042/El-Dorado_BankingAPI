@@ -20,22 +20,25 @@ public class BillController {
     private static final Logger billLogger = LoggerFactory.getLogger(BillController.class);
 
 
-    @GetMapping("/bills/{billId}")
+    @GetMapping("bills/{billId}")
     public ResponseEntity<?> getBillById(@PathVariable Long billId) {
         billLogger.info("Fetching bill with id {}", billId);
-        billService.getBillById(billId);
-        return null;
+        return billService.getBillById(billId);
     }
 
 
 
     @GetMapping("accounts/{accountId}/bills")
-    public ResponseEntity<?> getAllBills(@PathVariable Long accountId) {
+    public ResponseEntity<?> getAllBillsByAccount(@PathVariable Long accountId) {
         billLogger.info("Fetching all bills for account id {}", accountId);
-        billService.getBillsForAccount(accountId);
-        return null;
+        return billService.getBillsForAccount(accountId);
     }
 
+    @GetMapping("customers/{customerId}/bills")
+    public ResponseEntity<?> getAllBillsByCustomer(@PathVariable Long customerId){
+        billLogger.info("Fetching all bills for customer {}",customerId);
+        return billService.getAllBillsByCustomer(customerId);
+    }
 
     @PostMapping("accounts/{account_Id}/bills")
     public ResponseEntity<?> createBill(@PathVariable Long accountId, @RequestBody Bill bill) {
