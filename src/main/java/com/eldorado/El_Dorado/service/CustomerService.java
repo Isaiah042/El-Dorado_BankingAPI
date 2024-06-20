@@ -29,7 +29,7 @@ public class CustomerService {
     }
 
     public Optional<Customer> getCustomerByAccountId(Long accountId) {
-        return customerRepo.findById(accountId);
+        return customerRepo.findCustomerByAccountId(accountId);
     }
 
     public Optional<Customer> getCustomerByCustomerId(Long customerId) {
