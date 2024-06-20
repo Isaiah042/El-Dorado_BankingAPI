@@ -42,12 +42,11 @@ public class AccountController {
         return accounts;
     }
 
-    @DeleteMapping("/accounts/{accountId}")
-
-    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId) {
-        return ResponseHandler.responseBuilder("Account successfully deleted", HttpStatus.NO_CONTENT, accountService.deleteAccount(accountId));
-    }
-
+//    @DeleteMapping("/accounts/{accountId}")
+//    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId) {
+//        return ResponseHandler.responseBuilder("Account successfully deleted", HttpStatus.NO_CONTENT, accountService.deleteAccount(accountId));
+//    }
+        @DeleteMapping("/accounts/{accountId}")
         public ResponseEntity<?> deleteAccountById (@PathVariable Long accountId, @RequestBody Account account){
             return accountService.deleteAccount(accountId);
 
@@ -57,6 +56,5 @@ public class AccountController {
         public ResponseEntity<Account> updateAccount (@PathVariable Long accountId, @RequestBody Account account){
             return accountService.updateAccount(accountId, account);
         }
-
     }
 

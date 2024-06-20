@@ -44,13 +44,14 @@ public class AccountService {
         return accounts;
     }
 
-
-    public ResponseEntity<?> deleteAccount(Long accountId) {
-        return accountRepo.findById(accountId)
-                .map(account -> {
-                    accountRepo.delete(account);
-                    return ResponseEntity.noContent().build();
-                }).orElseThrow(() -> new ResourceNotFoundException("deleted "));
+    public ResponseEntity<?> deleteAccount(Long accountId){
+       Account accountToDelete = accountRepo.findById(accountId).orElse(null);
+       if(accountToDelete == null){
+           throw new ResourceNotFoundException("This account does not exist");
+       }else {
+           accountRepo.delete(accountToDelete);
+           return ResponseEntity.ok("Code: 202 \nMessage: Account successfully deleted");
+       }
     }
 
     public void verifyAccount(Long accountId) {
