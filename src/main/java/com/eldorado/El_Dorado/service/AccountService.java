@@ -6,10 +6,11 @@ import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class AccountService {
@@ -28,11 +29,17 @@ public class AccountService {
     }
 
     public Account getAccountsById(Long accountId) {
-       return accountRepo.findById(accountId).orElse(null);
+        return accountRepo.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Error fetching account with this id"));
     }
 
-    public Iterable<Account> getAccountsByCustomerId(Long customerId) {
-        return (Iterable<Account>) accountRepo.findById(customerId).orElse(null);
+
+    public List<Account> getAccountsByCustomerId(Long customerId) {
+        List<Account> accounts = accountRepo.findByCustomerId(customerId);
+        if (accounts.isEmpty()) {
+            throw new ResourceNotFoundException("Error fetching accounts with this customer id");
+        }
+        return accounts;
     }
 
 
@@ -51,8 +58,8 @@ public class AccountService {
         }
     }
 
-    public void updateAccount(Long accountId, Account accountDetails) {
-        accountRepo.findById(accountId)
+    public ResponseEntity<Account> updateAccount(Long accountId, Account accountDetails) {
+        return accountRepo.findById(accountId)
                 .map(account -> {
                     account.setType(accountDetails.getType());
                     account.setNickname(accountDetails.getNickname());
@@ -61,8 +68,8 @@ public class AccountService {
                     account.setCustomer(accountDetails.getCustomer());
                     Account updatedAccount = accountRepo.save(account);
                     return ResponseEntity.ok().body(updatedAccount);
-                });
-        ResponseEntity.notFound().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

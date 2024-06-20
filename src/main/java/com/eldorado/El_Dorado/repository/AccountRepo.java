@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface AccountRepo extends CrudRepository<Account, Long> {
 
-    @Query(value = "select a.* from account Where account.id = ? And account.customer_id = customer.id",nativeQuery = true)
-    List<Account> findByCustomer(Long customerId);
+    @Query(value = "select a.* from account a, customer c Where a.id = ? And a.customer_id = c.id",nativeQuery = true)
+    List<Account> findByCustomerId(Long customerId);
 }
