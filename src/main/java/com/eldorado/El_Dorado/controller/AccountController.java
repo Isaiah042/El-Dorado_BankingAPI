@@ -27,7 +27,6 @@ public class AccountController {
     @GetMapping("/accounts")
     public Iterable<Account>  getAllAccounts() {
         return  accountService.getAllAccounts();
-
     }
 
     @GetMapping("/accounts/{accountId}")
@@ -43,14 +42,11 @@ public class AccountController {
     @DeleteMapping("/accounts/{accountId}")
     public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId, @RequestBody Account account){
         return accountService.deleteAccount(accountId);
-
     }
 
     @PutMapping("/accounts/{accountId}")
     public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account account) {
        return accountService.updateAccount(accountId, account);
-
     }
-
 
 }
