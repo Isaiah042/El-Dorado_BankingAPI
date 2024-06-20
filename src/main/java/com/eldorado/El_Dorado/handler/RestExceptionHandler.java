@@ -3,6 +3,7 @@ package com.eldorado.El_Dorado.handler;
 import com.eldorado.El_Dorado.error.ErrorDetail;
 import com.eldorado.El_Dorado.error.ValidationError;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,6 +41,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(TransactionFailedException.class)
+    public ResponseEntity<?> handleTransactionFailedException(TransactionFailedException tfe, HttpServletRequest request) {
+
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+        errorDetail.setTitle("Insufficient funds");
+        errorDetail.setDetail(tfe.getMessage());
+        errorDetail.setDeveloperMessage(tfe.getClass().getName());
+
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
+    }
+
+
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
@@ -80,5 +96,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(manve, errorDetail, headers, status, request);
     }
+
 
 }
