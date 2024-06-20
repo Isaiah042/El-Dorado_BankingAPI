@@ -24,7 +24,7 @@ public class CustomerService {
         Optional<Customer> customer = customerRepo.findById(customerId);
 
         if(customer.isEmpty()) {
-            throw new ResourceNotFoundException("Customer with ID #" + customerId + " does not exist.");
+            throw new ResourceNotFoundException("Error fetching accounts");
         }
     }
 

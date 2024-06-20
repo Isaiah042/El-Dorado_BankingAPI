@@ -25,9 +25,6 @@ public class Customer {
     private Set<Address> addresses;
 
 
-//    @OneToMany(mappedBy = "customer")
-//    private Set<Account> accounts;
-
     public Customer() {
     }
 
@@ -36,8 +33,6 @@ public class Customer {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-//        this.addresses = addresses;
-//        this.accounts = accounts;
     }
 
     public Long getId() {
@@ -65,24 +60,12 @@ public class Customer {
     }
 
 
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
 
-
-
-
-//    public Set<Address> getAddresses() {
-//        return addresses;
-//    }
-//
-//    public void setAddresses(Set<Address> addresses) {
-//        this.addresses = addresses;
-//    }
-//
-//    public Set<Account> getAccounts() {
-//        return accounts;
-//    }
-//
-//    public void setAccounts(Set<Account> accounts) {
-//        this.accounts = accounts;
-//    }
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
+    }
 
 }

@@ -25,33 +25,38 @@ public class AccountController {
     public Account createAccount(@RequestBody Account account) {
         return accountService.createAccount(account);
     }
-    @GetMapping("/accounts")
-    public Iterable<Account>  getAllAccounts() {
-        return  accountService.getAllAccounts();
 
+    @GetMapping("/accounts")
+    public Iterable<Account> getAllAccounts() {
+        return accountService.getAllAccounts();
     }
 
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Account> AccountById(@PathVariable Long accountId) {
-       return new ResponseEntity<>(accountService.getAccountsById(accountId),HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAccountsById(accountId), HttpStatus.OK);
     }
 
     @GetMapping("/customers/{customerId}/accounts")
-    public List<Account> getAccountsByCustomerId(@PathVariable Long customerId){
+    public List<Account> getAccountsByCustomerId(@PathVariable Long customerId) {
         List<Account> accounts = accountService.getAccountsByCustomerId(customerId);
         return accounts;
     }
+
     @DeleteMapping("/accounts/{accountId}")
-    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId){
+
+    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId) {
         return ResponseHandler.responseBuilder("Account successfully deleted", HttpStatus.NO_CONTENT, accountService.deleteAccount(accountId));
+    }
+
+        public ResponseEntity<?> deleteAccountById (@PathVariable Long accountId, @RequestBody Account account){
+            return accountService.deleteAccount(accountId);
+
+        }
+
+        @PutMapping("/accounts/{accountId}")
+        public ResponseEntity<Account> updateAccount (@PathVariable Long accountId, @RequestBody Account account){
+            return accountService.updateAccount(accountId, account);
+        }
 
     }
 
-    @PutMapping("/accounts/{accountId}")
-    public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account account) {
-       return accountService.updateAccount(accountId, account);
-
-    }
-
-
-}
