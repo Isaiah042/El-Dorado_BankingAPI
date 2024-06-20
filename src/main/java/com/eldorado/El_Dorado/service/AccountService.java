@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 @Service
 public class AccountService {
@@ -47,8 +49,8 @@ public class AccountService {
         return accountRepo.findById(accountId)
                 .map(account -> {
                     accountRepo.delete(account);
-                    return ResponseEntity.ok().build();
-                }).orElse(ResponseEntity.notFound().build());
+                    return ResponseEntity.noContent().build();
+                }).orElseThrow(() -> new ResourceNotFoundException("deleted "));
     }
 
     public void verifyAccount(Long accountId) {
