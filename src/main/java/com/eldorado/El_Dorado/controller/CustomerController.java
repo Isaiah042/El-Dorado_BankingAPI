@@ -1,12 +1,18 @@
 package com.eldorado.El_Dorado.controller;
 
+import com.eldorado.El_Dorado.domain.Address;
 import com.eldorado.El_Dorado.domain.Customer;
+import com.eldorado.El_Dorado.response.ResponseHandler;
 import com.eldorado.El_Dorado.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class CustomerController {
@@ -18,37 +24,69 @@ public class CustomerController {
 
     @GetMapping("/accounts/{accountId}/customers")
     public ResponseEntity<?> getCustomerByAccountId(@PathVariable Long accountId) {
-        customerService.getCustomerByAccountId(accountId);
-        return null;
+
+        Optional<Customer> customer = customerService.getCustomerByAccountId(accountId);
+
+        if(customer == null){
+            return ResponseHandler.responseBuilder(
+                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND, null);
+        }else
+            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customer);
     }
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<?> getCustomerByCustomerId(@PathVariable Long customerId) {
-        customerService.getCustomerByCustomerId(customerId);
-        return null;
+        Optional<Customer> customer = customerService.getCustomerByCustomerId(customerId);
+
+        if(customer == null){
+            return ResponseHandler.responseBuilder(
+                    "Error fetching customers accounts.", HttpStatus.NOT_FOUND, null);
+        }else
+            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customer);
     }
 
     @GetMapping("/customers")
     public ResponseEntity<?> getAllCustomers() {
-        customerService.getAllCustomers();
-        return null;
+        Iterable<Customer> customer = customerService.getAllCustomers();
+
+        if(customer == null){
+            return ResponseHandler.responseBuilder(
+                    "Error fetching accounts.", HttpStatus.NOT_FOUND, null);
+        }else
+            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customer);
     }
 
     @PostMapping("/customers")
     public ResponseEntity<?> createCustomer(@RequestBody Customer customerToBeCreated) {
-        customerService.createCustomer(customerToBeCreated);
-        return null;
+
+        try {
+            customerService.createCustomer(customerToBeCreated);
+            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customerToBeCreated);
+        } catch (Exception e) {
+                return ResponseHandler.responseBuilder("Error.", HttpStatus.NOT_FOUND, null);
+        }
+
     }
 
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, @RequestBody Customer customerToBeUpdated) {
-        customerService.updateCustomer(customerId, customerToBeUpdated);
-        return null;
+
+        try {
+            customerService.updateCustomer(customerId, customerToBeUpdated);
+            return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customerToBeUpdated);
+        } catch (Exception e) {
+            return ResponseHandler.responseBuilder("Error.", HttpStatus.NOT_FOUND, null);
+        }
     }
 
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
-        customerService.deleteCustomer(customerId);
-        return null;
+            try {
+                customerService.deleteCustomer(customerId);
+                return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customerId);
+            } catch (Exception e) {
+                return ResponseHandler.responseBuilder(
+                        "Error.", HttpStatus.NOT_FOUND, null);
+            }
     }
 }

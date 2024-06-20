@@ -32,9 +32,6 @@ public class Address {
     @NotBlank(message = "Name cannot be blank")
     private String zip;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ADDRESS_ID")
-    private Customer customer;
 
     public Long getId() {
         return id;
@@ -84,11 +81,4 @@ public class Address {
         this.zip = zip;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 }
