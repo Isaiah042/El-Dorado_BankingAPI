@@ -3,6 +3,7 @@ package com.eldorado.El_Dorado.controller;
 
 import com.eldorado.El_Dorado.domain.Deposit;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
 import com.eldorado.El_Dorado.response.ResponseHandler;
 import com.eldorado.El_Dorado.service.DepositService;
 import jakarta.transaction.TransactionRolledbackException;
@@ -56,15 +57,19 @@ public class DepositController {
 
     @PostMapping("accounts/{accountId}/deposits")
     public ResponseEntity<?> makeNewDeposit(@PathVariable Long accountId, @RequestBody Deposit deposit) throws TransactionRolledbackException {
-        Deposit newDeposit = depositService.makeDeposit(accountId, deposit);
-        if(deposit == null)
+        try {
+            Deposit newDeposit = depositService.makeDeposit(accountId, deposit);
+            if(deposit == null)
+                return ResponseHandler.responseBuilder(
+                        "Error creating deposit",
+                        HttpStatus.NOT_FOUND);
             return ResponseHandler.responseBuilder(
-                    "Error creating deposit",
-                    HttpStatus.NOT_FOUND);
-        return ResponseHandler.responseBuilder(
-                "Created deposit and added it to the account",
-                HttpStatus.CREATED,
-                deposit);
+                    "Created deposit and added it to the account",
+                    HttpStatus.CREATED,
+                    deposit);
+        } catch (TransactionRolledbackException e) {
+            throw new TransactionFailedException();
+        }
     }
 
     @PutMapping("deposits/{depositId}")

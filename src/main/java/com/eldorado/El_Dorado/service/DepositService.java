@@ -3,10 +3,12 @@ package com.eldorado.El_Dorado.service;
 
 import com.eldorado.El_Dorado.domain.Account;
 import com.eldorado.El_Dorado.domain.Deposit;
+import com.eldorado.El_Dorado.domain.enums.Medium;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.DepositRepository;
+import com.eldorado.El_Dorado.utils.DepositUtils;
 import jakarta.transaction.TransactionRolledbackException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class DepositService {
@@ -24,7 +25,7 @@ public class DepositService {
     private final AccountRepo accountRepo;
 
     @Autowired
-    public DepositService(DepositRepository depositRepository, AccountRepo accountRepo){
+    public DepositService(DepositRepository depositRepository, AccountRepo accountRepo) {
         this.depositRepository = depositRepository;
         this.accountRepo = accountRepo;
     }
@@ -38,6 +39,7 @@ public class DepositService {
         return depositRepository.findById(depositId).orElse(null);
     }
 
+    @Transactional
     public Deposit makeDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException{
         TransactionType type = checkDepositType(deposit);
         Deposit newDeposit = null;
@@ -48,7 +50,6 @@ public class DepositService {
         }
         return newDeposit;
     }
-
 
     public ResponseEntity<?> updateDeposit(Long depositId, Deposit depositRequest){
         verifyDeposit(depositId);
@@ -76,29 +77,58 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit makeRegularDeposit(Long accountId, Deposit deposit){
-        Account account = verifyAccount(accountId);
-        double accountBalance = account.getBalance();
-        double newBalance = accountBalance + deposit.getAmount();
-        account.setBalance(newBalance);
-        accountRepo.save(account);
-        return depositRepository.save(deposit);
+    public Deposit makeRegularDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException{
+        Deposit newDeposit = null;
+        if (checkDepositMedium(deposit) == Medium.Balance)
+            newDeposit = makeRegularDepositUsingBalance(accountId, deposit);
+        else if (checkDepositMedium(deposit) == Medium.Rewards)
+            newDeposit = makeRegularDepositUsingRewards(accountId, deposit);
+
+        return newDeposit;
     }
 
     @Transactional
     public Deposit makeP2PDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException {
+        Deposit newDeposit = null;
+        if (checkDepositMedium(deposit) == Medium.Balance)
+            newDeposit = makeP2PDepositUsingBalance(accountId, deposit);
+        else if (checkDepositMedium(deposit) == Medium.Rewards)
+            newDeposit = makeP2PDepositUsingRewards(accountId, deposit);
+
+        return newDeposit;
+    }
+
+
+    public Deposit makeRegularDepositUsingBalance(Long accountId, Deposit deposit){
+        Account account = verifyAccount(accountId);
+        DepositUtils.depositUsingBalance(account, deposit.getAmount());
+        accountRepo.save(account);
+        return depositRepository.save(deposit);
+    }
+
+
+    public Deposit makeRegularDepositUsingRewards(Long accountId, Deposit deposit){
+        Account account = verifyAccount(accountId);
+        DepositUtils.depositUsingRewards(account, deposit.getAmount());
+        accountRepo.save(account);
+        return depositRepository.save(deposit);
+    }
+
+    public Deposit makeP2PDepositUsingBalance(Long accountId, Deposit deposit) throws TransactionRolledbackException {
         Account payingAccount = verifyAccount(accountId);
         Account receivingAccount = accountRepo.findById(deposit.getPayee_id()).orElse(null);
-        if(payingAccount.getBalance() - deposit.getAmount() < 0){
-            throw new TransactionRolledbackException("Insufficient funds");
-        }
-        if(receivingAccount == null){
-            throw new ResourceNotFoundException("Receiving account not found");
-        }
-        double payerBalance = payingAccount.getBalance() - deposit.getAmount();
-        double payeeBalance = receivingAccount.getBalance() + deposit.getAmount();
-        payingAccount.setBalance(payerBalance);
-        receivingAccount.setBalance(payeeBalance);
+        assert receivingAccount != null;
+        DepositUtils.depositP2PUsingBalance(payingAccount, receivingAccount, deposit.getAmount());
+        accountRepo.save(payingAccount);
+        accountRepo.save(receivingAccount);
+        return depositRepository.save(deposit);
+    }
+
+    public Deposit makeP2PDepositUsingRewards(Long accountId, Deposit deposit) throws TransactionRolledbackException {
+        Account payingAccount = verifyAccount(accountId);
+        Account receivingAccount = accountRepo.findById(deposit.getPayee_id()).orElse(null);
+        assert receivingAccount != null;
+        DepositUtils.depositP2PUsingRewards(payingAccount, receivingAccount, deposit.getAmount());
         accountRepo.save(payingAccount);
         accountRepo.save(receivingAccount);
         return depositRepository.save(deposit);
@@ -114,24 +144,15 @@ public class DepositService {
     protected TransactionType checkDepositType(Deposit deposit){
         return deposit.getType();
     }
+
+    protected Medium checkDepositMedium(Deposit deposit){
+        return deposit.getMedium();
+    }
     protected Account verifyAccount(Long accountId){
-        Account account = accountRepo.findById(accountId).orElse(null);
-        if(account == null){
+        if(!accountRepo.existsById(accountId)){
             throw new ResourceNotFoundException("Account not found");
         }
-        return account;
+        return accountRepo.findById(accountId).orElse(null);
     }
 
-    /**
-     * deleting deposit should reverse the process and result in a withdrawal
-     * @param depositId
-     * @return
-     *
-     * protected void verifyPoll(Long id) throws ResourceNotFoundException{
-     *         Poll poll = pollRepository.findById(id).orElse(null);
-     *         if(poll == null){
-     *             throw new ResourceNotFoundException("Poll with id " + id + " not found");
-     *         }
-     *     }
-     */
 }
