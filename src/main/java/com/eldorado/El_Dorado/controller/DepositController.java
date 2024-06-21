@@ -31,15 +31,19 @@ public class DepositController {
 
     @GetMapping("accounts/{accountId}/deposits")
     public ResponseEntity<?> getAllAccountDeposits(@PathVariable Long accountId){
-        Iterable<Deposit> allDeposits = depositService.getAllDeposits(accountId);
-        if(!allDeposits.iterator().hasNext())
+        try {
+            Iterable<Deposit> allDeposits = depositService.getAllDeposits(accountId);
+            if(!allDeposits.iterator().hasNext())
+                return ResponseHandler.responseBuilder(
+                        "Account not found",
+                        HttpStatus.NOT_FOUND);
             return ResponseHandler.responseBuilder(
-                    "Account not found",
-                    HttpStatus.NOT_FOUND);
-        return ResponseHandler.responseBuilder(
-                "Success",
-                HttpStatus.OK,
-                allDeposits);
+                    "Success",
+                    HttpStatus.OK,
+                    allDeposits);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     @GetMapping("/deposits/{depositId}")
@@ -80,11 +84,16 @@ public class DepositController {
                 depositService.updateDeposit(depositId, deposit));
     }
 
-    @DeleteMapping("deposits/{depositId}")
-    public ResponseEntity<?> deleteExistingDeposit (@PathVariable Long depositId){
-        //status 204 NO_CONTENT
-        depositService.deleteDeposit(depositId);
-        return null;
+    @DeleteMapping("deposits/{depositId}/{accountId}")
+    public ResponseEntity<?> deleteExistingDeposit (@PathVariable Long depositId, @PathVariable Long accountId) throws TransactionRolledbackException {
+        Deposit reversedDeposit = depositService.deleteDeposit(depositId, accountId);
+        if(reversedDeposit == null)
+            return ResponseHandler.responseBuilder(
+                    "Deposit id does not exist",
+                    HttpStatus.NOT_FOUND);
+        return ResponseHandler.responseBuilder(
+                "Deleted successfully",
+                HttpStatus.NO_CONTENT);
     }
 
 

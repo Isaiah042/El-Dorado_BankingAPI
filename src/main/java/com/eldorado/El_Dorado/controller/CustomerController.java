@@ -58,7 +58,6 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public ResponseEntity<?> createCustomer(@RequestBody Customer customerToBeCreated) {
-
         try {
             customerService.createCustomer(customerToBeCreated);
             return ResponseHandler.responseBuilder("Success", HttpStatus.OK, customerToBeCreated);

@@ -18,10 +18,11 @@ import java.time.LocalDateTime;
 @Entity
 public class Deposit {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DEPOSIT_ID")
     private Long id;//deposit id
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TransactionType type;//P2P , Deposit, Withdrawal      in the case of P2P one account withdraws and the other receives.
 
     @CreationTimestamp
@@ -29,8 +30,10 @@ public class Deposit {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @NotNull
     private Long payee_id;
     @Enumerated(EnumType.STRING)//accountId receiving deposit
+    @NotNull
     private Medium medium;
     @NotNull
     private Double amount;
