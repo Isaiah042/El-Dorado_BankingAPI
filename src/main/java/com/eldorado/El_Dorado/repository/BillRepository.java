@@ -9,8 +9,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query("SELECT b FROM Bill b WHERE b.account_id = :account_id")
-    List<Bill> findBillsByAccountId(@Param("account_id") String accountId);
+    List<Bill> findBillsByAccountId(@Param("account_id") Long accountId);
 }
-
-
-

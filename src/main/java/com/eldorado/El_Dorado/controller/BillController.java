@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 public class BillController {
 
@@ -19,46 +18,45 @@ public class BillController {
 
     private static final Logger billLogger = LoggerFactory.getLogger(BillController.class);
 
-
-    @GetMapping("bills/{billId}")
-    public ResponseEntity<?> getBillById(@PathVariable Long billId) {
+    @GetMapping("/bills/{billId}")
+    public ResponseEntity<Bill> getBillById(@PathVariable Long billId) {
         billLogger.info("Fetching bill with id {}", billId);
-        return billService.getBillById(billId);
+        Bill bill = billService.getBillById(billId);
+        return new ResponseEntity<>(bill, HttpStatus.OK);
     }
 
-
-
-    @GetMapping("accounts/{accountId}/bills")
-    public ResponseEntity<?> getAllBillsByAccount(@PathVariable Long accountId) {
+    @GetMapping("/accounts/{accountId}/bills")
+    public ResponseEntity<List<Bill>> getAllBillsByAccount(@PathVariable Long accountId) {
         billLogger.info("Fetching all bills for account id {}", accountId);
-        return billService.getBillsForAccount(accountId);
+        List<Bill> bills = billService.getBillsForAccount(accountId);
+        return new ResponseEntity<>(bills, HttpStatus.OK);
     }
 
-    @GetMapping("customers/{customerId}/bills")
-    public ResponseEntity<?> getAllBillsByCustomer(@PathVariable Long customerId){
-        billLogger.info("Fetching all bills for customer {}",customerId);
-        return billService.getAllBillsByCustomer(customerId);
+    @GetMapping("/customers/{customerId}/bills")
+    public ResponseEntity<List<Bill>> getAllBillsByCustomer(@PathVariable Long customerId) {
+        billLogger.info("Fetching all bills for customer {}", customerId);
+        List<Bill> bills = billService.getAllBillsByCustomer(customerId);
+        return new ResponseEntity<>(bills, HttpStatus.OK);
     }
 
-    @PostMapping("accounts/{account_Id}/bills")
-    public ResponseEntity<?> createBill(@PathVariable Long accountId, @RequestBody Bill bill) {
+    @PostMapping("/accounts/{accountId}/bills")
+    public ResponseEntity<Bill> createBill(@PathVariable("accountId") Long accountId, @RequestBody Bill bill) {
         Bill createdBill = billService.createBill(accountId, bill);
         billLogger.info("Created bill for account ID: {}", accountId);
-        return ResponseEntity.status(201).body(createdBill);
+        return new ResponseEntity<>(createdBill, HttpStatus.CREATED);
     }
 
-
-    @DeleteMapping("bills/{billId}")
-    public ResponseEntity<?> deleteBill(@PathVariable Long billId) {
+    @DeleteMapping("/bills/{billId}")
+    public ResponseEntity<Void> deleteBill(@PathVariable Long billId) {
         billLogger.info("Deleting bill with ID: {}", billId);
         billService.deleteBill(billId);
         return ResponseEntity.noContent().build();
     }
 
-
-    @PutMapping("bills/{billId}")
-    public ResponseEntity<?> updateBill(@PathVariable Long billId, @RequestBody Bill billDetails) {
+    @PutMapping("/bills/{billId}")
+    public ResponseEntity<Bill> updateBill(@PathVariable Long billId, @RequestBody Bill billDetails) {
         billLogger.info("Updating bill with ID: {}", billId);
-        return billService.updateBill(billId, billDetails);
+        Bill updatedBill = billService.updateBill(billId, billDetails);
+        return new ResponseEntity<>(updatedBill, HttpStatus.OK);
     }
 }
