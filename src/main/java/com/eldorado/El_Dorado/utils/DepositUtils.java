@@ -43,6 +43,8 @@ public class DepositUtils {
             throw new TransactionRolledbackException("Insufficient funds!");
     }
 
-    public static void reverseDeposit(){}
+    public static void reverseDeposit(Account payingAccount, Account receivingAccount, Double amount){
+
+    }
 
 }

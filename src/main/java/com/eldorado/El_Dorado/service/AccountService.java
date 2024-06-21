@@ -5,14 +5,14 @@ import com.eldorado.El_Dorado.domain.Account;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.CustomerRepo;
+import com.eldorado.El_Dorado.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 @Service
 public class AccountService {
@@ -50,9 +50,11 @@ public class AccountService {
            throw new ResourceNotFoundException("This account does not exist");
        }else {
            accountRepo.delete(accountToDelete);
-           return ResponseEntity.ok("Code: 202 \nMessage: Account successfully deleted");
+           return ResponseHandler.responseBuilder("Account successfully deleted", HttpStatus.ACCEPTED);
+
        }
     }
+
 
     public void verifyAccount(Long accountId) {
         Optional<Account> account = accountRepo.findById(accountId);

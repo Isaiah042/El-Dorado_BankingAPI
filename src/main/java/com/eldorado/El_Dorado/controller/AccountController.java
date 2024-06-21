@@ -1,7 +1,5 @@
 package com.eldorado.El_Dorado.controller;
 
-import com.eldorado.El_Dorado.domain.Customer;
-import com.eldorado.El_Dorado.response.ResponseHandler;
 import com.eldorado.El_Dorado.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +40,6 @@ public class AccountController {
         return accounts;
     }
 
-//    @DeleteMapping("/accounts/{accountId}")
-//    public ResponseEntity<?> deleteAccountById(@PathVariable Long accountId) {
-//        return ResponseHandler.responseBuilder("Account successfully deleted", HttpStatus.NO_CONTENT, accountService.deleteAccount(accountId));
-//    }
         @DeleteMapping("/accounts/{accountId}")
         public ResponseEntity<?> deleteAccountById (@PathVariable Long accountId, @RequestBody Account account){
             return accountService.deleteAccount(accountId);
