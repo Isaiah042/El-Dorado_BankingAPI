@@ -77,7 +77,7 @@ public class DepositController {
     }
 
     @PutMapping("deposits/{depositId}/{accountId}")
-    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit, @RequestBody Long accountId) throws TransactionRolledbackException {
+    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit, @PathVariable Long accountId) throws TransactionRolledbackException {
         try {
             Deposit updatedDeposit = depositService.updateDeposit(depositId, deposit, accountId);
             return ResponseHandler.responseBuilder(
