@@ -1,5 +1,8 @@
 package com.eldorado.El_Dorado.domain;
 
+import com.eldorado.El_Dorado.domain.enums.Medium;
+import com.eldorado.El_Dorado.domain.enums.Status;
+import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
@@ -10,15 +13,15 @@ public class Withdrawal {
     @Id
     @GeneratedValue
     private Long id;
-    private String type;
+    private TransactionType type;
     private String transaction_date;
-    private String status;
+    private Status status;
     private Long payer_id;
-    private String medium;
+    private Medium medium;
     private Double amount;
     private String description;
 
-    public Withdrawal(Long id, String type, String transaction_date, String status, Long payer_id, String medium, Double amount, String description) {
+    public Withdrawal(Long id, TransactionType type, String transaction_date, Status status, Long payer_id, Medium medium, Double amount, String description) {
         this.id = id;
         this.type = type;
         this.transaction_date = transaction_date;
@@ -41,11 +44,11 @@ public class Withdrawal {
         this.id = id;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
@@ -57,11 +60,11 @@ public class Withdrawal {
         this.transaction_date = transaction_date;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -73,11 +76,11 @@ public class Withdrawal {
         this.payer_id = payer_id;
     }
 
-    public String getMedium() {
+    public Medium getMedium() {
         return medium;
     }
 
-    public void setMedium(String medium) {
+    public void setMedium(Medium medium) {
         this.medium = medium;
     }
 

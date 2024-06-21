@@ -1,6 +1,7 @@
 package com.eldorado.El_Dorado.controller;
 
 import com.eldorado.El_Dorado.domain.Withdrawal;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
 import com.eldorado.El_Dorado.repository.WithdrawalRepository;
 import com.eldorado.El_Dorado.service.WithdrawalService;
 import org.slf4j.Logger;
@@ -36,8 +37,15 @@ public class WithdrawalController extends WithdrawalService {
     }
 
     @PostMapping("accounts/{accountId}/withdrawals")
-    public ResponseEntity<?> makeNewWithdrawal(Withdrawal withdrawal){
-        withdrawalService.saveWithdrawal(withdrawal);
+    public ResponseEntity<?> makeNewWithdrawal(@PathVariable Long accountId, @RequestBody Withdrawal withdrawal) {
+
+        withdrawal.setId(accountId);
+        try {
+            withdrawalService.saveWithdrawal(withdrawal);
+        } catch (TransactionFailedException e) {
+            throw new RuntimeException(e);
+        }
+        withdrawalLogger.info("New withdrawal created: {}", withdrawal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -47,10 +55,10 @@ public class WithdrawalController extends WithdrawalService {
     }
 
     //ResponseEntity<?>
-    @DeleteMapping("withdrawals/{withdrawalId}")
-    public ResponseEntity<?> deleteExistingWithdrawal (@PathVariable Long withdrawalId){
-        withdrawalService.deleteWithdrawalById(withdrawalId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//    @DeleteMapping("withdrawals/{withdrawalId}")
+//    public ResponseEntity<?> deleteExistingWithdrawal (@PathVariable Long withdrawalId){
+//        withdrawalService.deleteWithdrawalById(withdrawalId);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
 }
