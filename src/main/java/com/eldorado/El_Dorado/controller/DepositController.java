@@ -76,12 +76,20 @@ public class DepositController {
         }
     }
 
-    @PutMapping("deposits/{depositId}")
-    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit){
-        return ResponseHandler.responseBuilder(
-                "Accepted deposit modification",
-                HttpStatus.ACCEPTED,
-                depositService.updateDeposit(depositId, deposit));
+    @PutMapping("deposits/{depositId}/{accountId}")
+    public ResponseEntity<?> updateExistingDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit, @RequestBody Long accountId) throws TransactionRolledbackException {
+        try {
+            Deposit updatedDeposit = depositService.updateDeposit(depositId, deposit, accountId);
+            return ResponseHandler.responseBuilder(
+                    "Accepted deposit modification",
+                    HttpStatus.ACCEPTED,
+                    updatedDeposit);
+        } catch (TransactionRolledbackException e) {
+            return ResponseHandler.responseBuilder(
+                    "Deposit ID does not exist",
+                    HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     @DeleteMapping("deposits/{depositId}/{accountId}")

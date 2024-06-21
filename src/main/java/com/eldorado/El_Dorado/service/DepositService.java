@@ -52,19 +52,25 @@ public class DepositService {
         return newDeposit;
     }
 
-    public ResponseEntity<?> updateDeposit(Long depositId, Deposit depositRequest){
-        verifyDeposit(depositId);
-        return depositRepository.findById(depositId).map(deposit ->{
-            deposit.setType(depositRequest.getType());
-            deposit.setTransaction_date(LocalDateTime.now());
-            deposit.setStatus(depositRequest.getStatus());
-            deposit.setPayee_id(depositRequest.getPayee_id());
-            deposit.setMedium(depositRequest.getMedium());
-            deposit.setAmount(depositRequest.getAmount());
-            deposit.setDescription(depositRequest.getDescription());
-            depositRepository.save(deposit);
-            return new ResponseEntity(deposit, HttpStatus.ACCEPTED);
-        }).orElseThrow(() -> new ResourceNotFoundException("Deposit ID does not exist."));
+    @Transactional
+    public Deposit updateDeposit(Long depositId, Deposit depositRequest, Long accountId) throws TransactionRolledbackException {
+        Deposit deposit = verifyDeposit(depositId);
+        Deposit newDeposit = new Deposit();
+        if(deposit.getType() == TransactionType.DEPOSIT) {
+            newDeposit.setType(deposit.getType());
+            newDeposit.setPayee_id(deposit.getPayee_id());
+            newDeposit.setDescription("Deposit update: REF Deposit #" + deposit.getId());
+            newDeposit.setMedium(deposit.getMedium());
+            newDeposit.setStatus(Status.PENDING);
+            if (depositRequest.getAmount() == deposit.getAmount()) {
+                newDeposit.setAmount(depositRequest.getAmount());
+            } else {
+                throw new TransactionRolledbackException("Deposit amount must equal amount in previous deposit.");
+            }
+            deleteDeposit(depositId, accountId);
+            return makeDeposit(accountId, newDeposit);
+        }else
+            throw new TransactionRolledbackException("Unable to update");
     }
 
 
@@ -98,7 +104,7 @@ public class DepositService {
 
         newDeposit.setStatus(Status.PENDING);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
