@@ -4,6 +4,7 @@ package com.eldorado.El_Dorado.service;
 import com.eldorado.El_Dorado.domain.Account;
 import com.eldorado.El_Dorado.domain.Deposit;
 import com.eldorado.El_Dorado.domain.enums.Medium;
+import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
@@ -67,13 +68,24 @@ public class DepositService {
     }
 
 
-    public ResponseEntity<?> deleteDeposit(Long depositId){
-        Deposit depositToDelete = depositRepository.findById(depositId).orElse(null);
-        if(depositToDelete == null){
-            throw new ResourceNotFoundException("This id does not exist in deposits");
-        }else
-            //perform the withdrawal here
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @Transactional
+    public Deposit deleteDeposit(Long depositId, Long accountId) throws TransactionRolledbackException {
+        Deposit oldDeposit = verifyDeposit(depositId);
+
+        Account payingAccount = verifyAccount(accountId);
+        Account receivingAccount = verifyAccount(oldDeposit.getPayee_id());
+        double amount = oldDeposit.getAmount();
+        if(checkDepositMedium(oldDeposit) == Medium.Balance){
+            payingAccount.setBalance(payingAccount.getBalance() + amount);
+            receivingAccount.setBalance(receivingAccount.getBalance() - amount);
+        } else if (checkDepositMedium(oldDeposit) == Medium.Rewards){
+            payingAccount.setRewards((int) (payingAccount.getRewards() + amount));
+        }
+
+        oldDeposit.setAmount(0.0);
+        oldDeposit.setStatus(Status.CANCELLED);
+        oldDeposit.setDescription("Reversal");
+        return depositRepository.save(oldDeposit);
     }
 
     @Transactional
@@ -84,6 +96,13 @@ public class DepositService {
         else if (checkDepositMedium(deposit) == Medium.Rewards)
             newDeposit = makeRegularDepositUsingRewards(accountId, deposit);
 
+        newDeposit.setStatus(Status.PENDING);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        newDeposit.setStatus(Status.COMPLETED);
         return newDeposit;
     }
 
@@ -95,11 +114,18 @@ public class DepositService {
         else if (checkDepositMedium(deposit) == Medium.Rewards)
             newDeposit = makeP2PDepositUsingRewards(accountId, deposit);
 
+        newDeposit.setStatus(Status.PENDING);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        newDeposit.setStatus(Status.COMPLETED);
         return newDeposit;
     }
 
 
-    public Deposit makeRegularDepositUsingBalance(Long accountId, Deposit deposit){
+    public Deposit makeRegularDepositUsingBalance(Long accountId, Deposit deposit) throws TransactionRolledbackException{
         Account account = verifyAccount(accountId);
         DepositUtils.depositUsingBalance(account, deposit.getAmount());
         accountRepo.save(account);
@@ -107,7 +133,7 @@ public class DepositService {
     }
 
 
-    public Deposit makeRegularDepositUsingRewards(Long accountId, Deposit deposit){
+    public Deposit makeRegularDepositUsingRewards(Long accountId, Deposit deposit) throws TransactionRolledbackException{
         Account account = verifyAccount(accountId);
         DepositUtils.depositUsingRewards(account, deposit.getAmount());
         accountRepo.save(account);
@@ -134,11 +160,11 @@ public class DepositService {
         return depositRepository.save(deposit);
     }
 
-    protected void verifyDeposit(Long depositId){
-        Deposit deposit = depositRepository.findById(depositId).orElse(null);
-        if(deposit == null){
+    protected Deposit verifyDeposit(Long depositId){
+        if(!depositRepository.existsById(depositId)){
             throw new ResourceNotFoundException("Deposit with id " + depositId + " not found");
         }
+        return depositRepository.findById(depositId).orElse(null);
     }
 
     protected TransactionType checkDepositType(Deposit deposit){
