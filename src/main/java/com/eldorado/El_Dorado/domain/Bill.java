@@ -2,6 +2,7 @@ package com.eldorado.El_Dorado.domain;
 import com.eldorado.El_Dorado.domain.enums.Medium;
 import jakarta.persistence.*;
 import com.eldorado.El_Dorado.domain.enums.Status;
+import jakarta.validation.constraints.NotEmpty;
 
 
 @Entity
@@ -13,7 +14,7 @@ public class Bill{
     private Long billId;
     @Enumerated(EnumType.STRING)
     private Status billStatus;
-
+    @NotEmpty
     private String billPayee;
 
     private String nickName;
@@ -27,7 +28,7 @@ public class Bill{
     private String upcoming_payment_date;
 
     private Double payment_amount;
-
+    @Column(name = "account_id")
     private String account_id;
 
     @Enumerated(EnumType.STRING)
