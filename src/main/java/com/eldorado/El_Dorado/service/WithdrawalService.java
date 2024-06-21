@@ -1,6 +1,9 @@
 package com.eldorado.El_Dorado.service;
+import com.eldorado.El_Dorado.domain.Account;
 import com.eldorado.El_Dorado.domain.Withdrawal;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
+import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.DepositRepository;
 import com.eldorado.El_Dorado.repository.WithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +23,26 @@ public class WithdrawalService {
     @Autowired
     private DepositRepository depositRepository;
 
-    public void saveWithdrawal(Withdrawal withdrawal) {
+    @Autowired
+    private AccountRepo accountRepository;
+
+    public void saveWithdrawal(Withdrawal withdrawal) throws TransactionFailedException {
+        Long accountId = withdrawal.getId();
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new ResourceNotFoundException("Account with id " + accountId + " not found"));
+
+        double currentBalance = account.getBalance();
+        double withdrawalAmount = withdrawal.getAmount();
+        if (currentBalance < withdrawalAmount) {
+            throw new TransactionFailedException("Insufficient funds for account with id " + accountId);
+        }
+
+        // Deduct the withdrawal amount from the account balance
+        account.setBalance(currentBalance - withdrawalAmount);
         withdrawalRepository.save(withdrawal);
     }
 
-    public ResponseEntity<?> getAllWithdrawals(Long accountId) {
+    public ResponseEntity<?> getAllWithdrawals(Account account, Long accountId, Withdrawal withdrawal) {
+        double balance = account.getBalance();
         return new ResponseEntity<>(withdrawalRepository.findAll(), HttpStatus.OK);
     }
 
