@@ -73,10 +73,17 @@ public class BillController {
 
     @DeleteMapping("/bills/{billId}")
     public ResponseEntity<Map<String, Object>> deleteBill(@PathVariable Long billId) {
-        billService.deleteBill(billId);
-        Map<String, Object> response = new HashMap<>();
-        response.put("code", 204);
-        response.put("message", "Bill deleted successfully");
-        return ResponseEntity.noContent().build();
+        try {
+            billService.deleteBill(billId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("code", 204);
+            response.put("message", "Bill deleted successfully");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("code", 500);
+            errorResponse.put("message", "Error deleting bill");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }
