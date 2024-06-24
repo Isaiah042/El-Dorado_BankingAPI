@@ -7,17 +7,14 @@ import com.eldorado.El_Dorado.domain.enums.Medium;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import com.eldorado.El_Dorado.exception.ResourceNotFoundException;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
 import com.eldorado.El_Dorado.repository.AccountRepo;
 import com.eldorado.El_Dorado.repository.DepositRepository;
 import com.eldorado.El_Dorado.utils.DepositUtils;
-import jakarta.transaction.TransactionRolledbackException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 
 @Service
 public class DepositService {
@@ -41,45 +38,45 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit makeDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException{
+    public Deposit makeDeposit(Long accountId, Deposit deposit) throws TransactionFailedException{
         TransactionType type = checkDepositType(deposit);
         Deposit newDeposit = null;
-        if (type == TransactionType.DEPOSIT){
+        if (type == TransactionType.DEPOSIT && accountId.equals(deposit.getPayee().getId())){
             newDeposit = makeRegularDeposit(accountId, deposit);
-        } else if(type == TransactionType.P2P){
+        } else if(type == TransactionType.P2P && !accountId.equals(deposit.getPayee().getId())){
             newDeposit =makeP2PDeposit(accountId, deposit);
         }
         return newDeposit;
     }
 
     @Transactional
-    public Deposit updateDeposit(Long depositId, Deposit depositRequest, Long accountId) throws TransactionRolledbackException {
+    public Deposit updateDeposit(Long depositId, Deposit depositRequest, Long accountId) throws TransactionFailedException {
         Deposit deposit = verifyDeposit(depositId);
         Deposit newDeposit = new Deposit();
         if(deposit.getType() == TransactionType.DEPOSIT) {
             newDeposit.setType(deposit.getType());
-            newDeposit.setPayee_id(deposit.getPayee_id());
+            newDeposit.getPayee().setId(deposit.getPayee().getId());
             newDeposit.setDescription("Deposit update: REF Deposit #" + deposit.getId());
             newDeposit.setMedium(deposit.getMedium());
             newDeposit.setStatus(Status.PENDING);
             if (depositRequest.getAmount() == deposit.getAmount()) {
                 newDeposit.setAmount(depositRequest.getAmount());
             } else {
-                throw new TransactionRolledbackException("Deposit amount must equal amount in previous deposit.");
+                throw new TransactionFailedException("Deposit amount must equal amount in previous deposit.");
             }
             deleteDeposit(depositId, accountId);
             return makeDeposit(accountId, newDeposit);
         }else
-            throw new TransactionRolledbackException("Unable to update");
+            throw new TransactionFailedException("Unable to update");
     }
 
 
     @Transactional
-    public Deposit deleteDeposit(Long depositId, Long accountId) throws TransactionRolledbackException {
+    public Deposit deleteDeposit(Long depositId, Long accountId){
         Deposit oldDeposit = verifyDeposit(depositId);
 
         Account payingAccount = verifyAccount(accountId);
-        Account receivingAccount = verifyAccount(oldDeposit.getPayee_id());
+        Account receivingAccount = verifyAccount(oldDeposit.getPayee().getId());
         double amount = oldDeposit.getAmount();
         if(checkDepositMedium(oldDeposit) == Medium.Balance){
             payingAccount.setBalance(payingAccount.getBalance() + amount);
@@ -95,7 +92,7 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit makeRegularDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException{
+    public Deposit makeRegularDeposit(Long accountId, Deposit deposit){
         Deposit newDeposit = null;
         if (checkDepositMedium(deposit) == Medium.Balance)
             newDeposit = makeRegularDepositUsingBalance(accountId, deposit);
@@ -113,7 +110,7 @@ public class DepositService {
     }
 
     @Transactional
-    public Deposit makeP2PDeposit(Long accountId, Deposit deposit) throws TransactionRolledbackException {
+    public Deposit makeP2PDeposit(Long accountId, Deposit deposit) throws TransactionFailedException {
         Deposit newDeposit = null;
         if (checkDepositMedium(deposit) == Medium.Balance)
             newDeposit = makeP2PDepositUsingBalance(accountId, deposit);
@@ -131,7 +128,7 @@ public class DepositService {
     }
 
 
-    public Deposit makeRegularDepositUsingBalance(Long accountId, Deposit deposit) throws TransactionRolledbackException{
+    public Deposit makeRegularDepositUsingBalance(Long accountId, Deposit deposit){
         Account account = verifyAccount(accountId);
         DepositUtils.depositUsingBalance(account, deposit.getAmount());
         accountRepo.save(account);
@@ -139,16 +136,16 @@ public class DepositService {
     }
 
 
-    public Deposit makeRegularDepositUsingRewards(Long accountId, Deposit deposit) throws TransactionRolledbackException{
+    public Deposit makeRegularDepositUsingRewards(Long accountId, Deposit deposit){
         Account account = verifyAccount(accountId);
         DepositUtils.depositUsingRewards(account, deposit.getAmount());
         accountRepo.save(account);
         return depositRepository.save(deposit);
     }
 
-    public Deposit makeP2PDepositUsingBalance(Long accountId, Deposit deposit) throws TransactionRolledbackException {
+    public Deposit makeP2PDepositUsingBalance(Long accountId, Deposit deposit) throws TransactionFailedException {
         Account payingAccount = verifyAccount(accountId);
-        Account receivingAccount = accountRepo.findById(deposit.getPayee_id()).orElse(null);
+        Account receivingAccount = accountRepo.findById(deposit.getPayee().getId()).orElse(null);
         assert receivingAccount != null;
         DepositUtils.depositP2PUsingBalance(payingAccount, receivingAccount, deposit.getAmount());
         accountRepo.save(payingAccount);
@@ -156,9 +153,9 @@ public class DepositService {
         return depositRepository.save(deposit);
     }
 
-    public Deposit makeP2PDepositUsingRewards(Long accountId, Deposit deposit) throws TransactionRolledbackException {
+    public Deposit makeP2PDepositUsingRewards(Long accountId, Deposit deposit) throws TransactionFailedException {
         Account payingAccount = verifyAccount(accountId);
-        Account receivingAccount = accountRepo.findById(deposit.getPayee_id()).orElse(null);
+        Account receivingAccount = accountRepo.findById(deposit.getPayee().getId()).orElse(null);
         assert receivingAccount != null;
         DepositUtils.depositP2PUsingRewards(payingAccount, receivingAccount, deposit.getAmount());
         accountRepo.save(payingAccount);
