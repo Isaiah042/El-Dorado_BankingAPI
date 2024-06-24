@@ -2,6 +2,7 @@ package com.eldorado.El_Dorado.domain;
 
 
 import com.eldorado.El_Dorado.domain.enums.AccountType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
@@ -20,9 +21,8 @@ public class Account {
     private Double balance;
 
 
-     @ManyToOne(cascade = CascadeType.ALL)
+     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID")
-
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
