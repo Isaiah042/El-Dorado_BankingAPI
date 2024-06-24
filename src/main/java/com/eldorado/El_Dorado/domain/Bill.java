@@ -121,4 +121,5 @@ public class Bill{
     public void setMedium(Medium medium) {
         this.medium = medium;
     }
+
 }
