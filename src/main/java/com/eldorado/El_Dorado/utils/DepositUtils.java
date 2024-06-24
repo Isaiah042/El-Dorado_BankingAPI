@@ -1,7 +1,7 @@
 package com.eldorado.El_Dorado.utils;
 
 import com.eldorado.El_Dorado.domain.Account;
-import jakarta.transaction.TransactionRolledbackException;
+import com.eldorado.El_Dorado.exception.TransactionFailedException;
 
 public class DepositUtils {
 
@@ -18,7 +18,7 @@ public class DepositUtils {
         account.setRewards((int) newBalance);
     }
 
-    public static void depositP2PUsingRewards(Account payingAccount, Account receivingAccount, Double amount) throws TransactionRolledbackException{
+    public static void depositP2PUsingRewards(Account payingAccount, Account receivingAccount, Double amount) throws TransactionFailedException {
         double payerBalance = payingAccount.getRewards();
         double payeeBalance = receivingAccount.getRewards();
         if(payerBalance - amount > 0) {
@@ -27,10 +27,10 @@ public class DepositUtils {
             payerBalance = payerBalance - amount;
             payingAccount.setRewards((int) payerBalance);
         } else
-            throw new TransactionRolledbackException("Insufficient funds!");
+            throw new TransactionFailedException("Insufficient funds!");
     }
 
-    public static void depositP2PUsingBalance(Account payingAccount, Account receivingAccount, Double amount) throws TransactionRolledbackException{
+    public static void depositP2PUsingBalance(Account payingAccount, Account receivingAccount, Double amount) throws TransactionFailedException{
         double payerBalance = payingAccount.getBalance();
         double payeeBalance = receivingAccount.getBalance();
         if(payerBalance - amount > 0) {
@@ -40,7 +40,7 @@ public class DepositUtils {
             payingAccount.setBalance(payerBalance);
         }
         else
-            throw new TransactionRolledbackException("Insufficient funds!");
+            throw new TransactionFailedException("Insufficient funds!");
     }
 
     public static void reverseDeposit(Account payingAccount, Account receivingAccount, Double amount){
