@@ -3,17 +3,14 @@ package com.eldorado.El_Dorado.domain;
 import com.eldorado.El_Dorado.domain.enums.Medium;
 import com.eldorado.El_Dorado.domain.enums.Status;
 import com.eldorado.El_Dorado.domain.enums.TransactionType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-
-/**
- *
- */
-
 
 @Entity
 public class Deposit {
@@ -30,29 +27,29 @@ public class Deposit {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @NotNull
-    private Long payee_id;
     @Enumerated(EnumType.STRING)//accountId receiving deposit
     @NotNull
     private Medium medium;
     @NotNull
     private Double amount;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "ACCOUNT_ID")
+    @OnDelete( action = OnDeleteAction.CASCADE)
+    private Account payee;
 
-    //ability to deposit to a different account
+    public Deposit() {
+    }
 
-    public Deposit(Long id, TransactionType type, Status status, Long payee_id, Medium medium, Double amount, String description) {
+    public Deposit(Long id, TransactionType type, LocalDateTime transaction_date, Status status, Medium medium, Double amount, String description, Account payee) {
         this.id = id;
         this.type = type;
-        this.transaction_date = LocalDateTime.now();
+        this.transaction_date = transaction_date;
         this.status = status;
-        this.payee_id = payee_id;
         this.medium = medium;
         this.amount = amount;
         this.description = description;
-    }
-
-    public Deposit() {
+        this.payee = payee;
     }
 
     public Long getId() {
@@ -87,14 +84,6 @@ public class Deposit {
         this.status = status;
     }
 
-    public Long getPayee_id() {
-        return payee_id;
-    }
-
-    public void setPayee_id(Long payee_id) {
-        this.payee_id = payee_id;
-    }
-
     public Medium getMedium() {
         return medium;
     }
@@ -117,5 +106,13 @@ public class Deposit {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Account getPayee() {
+        return payee;
+    }
+
+    public void setPayee(Account payee) {
+        this.payee = payee;
     }
 }
