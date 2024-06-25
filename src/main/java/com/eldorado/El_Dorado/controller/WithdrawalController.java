@@ -2,8 +2,8 @@ package com.eldorado.El_Dorado.controller;
 
 import com.eldorado.El_Dorado.domain.Withdrawal;
 import com.eldorado.El_Dorado.exception.TransactionFailedException;
-import com.eldorado.El_Dorado.repository.WithdrawalRepository;
 import com.eldorado.El_Dorado.service.WithdrawalService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.eldorado.El_Dorado.response.ResponseHandler;
@@ -23,9 +23,14 @@ public class WithdrawalController extends WithdrawalService {
 
     @Autowired
     private WithdrawalService withdrawalService;
-    private WithdrawalRepository withdrawalRepository;
   
     private static final Logger withdrawalLogger = LoggerFactory.getLogger(WithdrawalController.class);
+
+    @GetMapping("/withdrawals")
+    public Iterable<Withdrawal> getAllWithdrawals() {
+        Iterable<Withdrawal> withdrawals = withdrawalService.getAllWithdrawals();
+        return withdrawals;
+    }
     @GetMapping("accounts/{accountId}/withdrawals")
     public Optional<Withdrawal> getAllAccountWithdrawalsByAccountId(@PathVariable Long accountId){
         return withdrawalService.getWithdrawalById(accountId);
@@ -37,21 +42,14 @@ public class WithdrawalController extends WithdrawalService {
     }
 
     @PostMapping("accounts/{accountId}/withdrawals")
-    public ResponseEntity<?> makeNewWithdrawal(@PathVariable Long accountId, @RequestBody Withdrawal withdrawal) {
-
-        withdrawal.setId(accountId);
-        try {
-            withdrawalService.saveWithdrawal(withdrawal);
-        } catch (TransactionFailedException e) {
-            throw new RuntimeException(e);
-        }
-        withdrawalLogger.info("New withdrawal created: {}", withdrawal);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> makeNewWithdrawal(@PathVariable Long accountId,@Valid @RequestBody Withdrawal withdrawal) {
+        return new ResponseEntity<>(withdrawalService.makeWithdrawal(accountId, withdrawal), HttpStatus.CREATED);
     }
 
     @PutMapping("withdrawals/{withdrawalId}")
-    public ResponseEntity<?> updateExistingWithdrawals(@PathVariable Long withdrawalId, @RequestBody Withdrawal withdrawal){
-        return ResponseHandler.responseBuilder("Accepted deposit modification", HttpStatus.ACCEPTED, withdrawalService.updateWithdrawal(withdrawalId, withdrawal));
+    public ResponseEntity<?> updateExistingWithdrawals(@PathVariable Long withdrawalId,@Valid @RequestBody Withdrawal withdrawal){
+        withdrawalService.updateWithdrawal(withdrawalId, withdrawal);
+        return ResponseHandler.responseBuilder("Accepted deposit modification", HttpStatus.ACCEPTED);
     }
 
     //ResponseEntity<?>

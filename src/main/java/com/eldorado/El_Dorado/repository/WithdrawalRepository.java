@@ -6,8 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WithdrawalRepository extends CrudRepository<Withdrawal, Long> {
     @Query(value = "select w.* from withdrawal w, where w.payer_id = ?", nativeQuery = true)
-    List<Withdrawal> findByAccount(Long accountId);
+    Optional<Withdrawal> findByAccount(Long accountId);
 }

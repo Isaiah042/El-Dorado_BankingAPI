@@ -6,27 +6,40 @@ import com.eldorado.El_Dorado.domain.enums.TransactionType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Withdrawal {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
+
     private String transaction_date;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
-    private Long payer_id;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account payer;
+
+    @Enumerated(EnumType.STRING)
     private Medium medium;
+
     private Double amount;
+
     private String description;
 
-    public Withdrawal(Long id, TransactionType type, String transaction_date, Status status, Long payer_id, Medium medium, Double amount, String description) {
+    public Withdrawal(Long id, TransactionType type, String transaction_date, Status status, Account payer, Medium medium, Double amount, String description, Long accountId) {
         this.id = id;
         this.type = type;
         this.transaction_date = transaction_date;
         this.status = status;
-        this.payer_id = payer_id;
+        this.payer = payer;
         this.medium = medium;
         this.amount = amount;
         this.description = description;
@@ -68,12 +81,12 @@ public class Withdrawal {
         this.status = status;
     }
 
-    public Long getPayer_id() {
-        return payer_id;
+    public Account getPayer() {
+        return payer;
     }
 
-    public void setPayer_id(Long payer_id) {
-        this.payer_id = payer_id;
+    public void setPayer(Account payer) {
+        this.payer = payer;
     }
 
     public Medium getMedium() {
@@ -99,4 +112,5 @@ public class Withdrawal {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
