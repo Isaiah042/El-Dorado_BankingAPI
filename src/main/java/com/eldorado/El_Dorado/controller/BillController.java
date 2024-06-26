@@ -53,10 +53,10 @@ public class BillController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/bills/{billId}")
-    public ResponseEntity<Bill> updateBill(@PathVariable Long billId, @RequestBody Bill billDetails) {
+    @PutMapping("/bills/{billId}/{accountId}")
+    public ResponseEntity<Bill> updateBill(@PathVariable Long billId, @RequestBody Bill billDetails, @PathVariable Long accountId) {
         billLogger.info("Updating bill with ID: {}", billId);
-        Bill updatedBill = billService.updateBill(billId, billDetails);
+        Bill updatedBill = billService.updateBill(billId, billDetails, accountId);
         return new ResponseEntity<>(updatedBill, HttpStatus.OK);
     }
 }
